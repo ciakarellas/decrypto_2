@@ -33,7 +33,7 @@ This file tracks the development tasks for the Decrypto game, based on the `prd.
 - [x] Implement basic score update logic within the `GameCubit`.
 
 ### 🧩 UI - Gameplay Widgets
-- [ ] Create a `WordCard` widget to display a single word, including a state to show it as hidden.
+- [x] Create a `WordCard` widget to display a single word, including a state to show it as hidden.
 - [ ] Create a `TeamWordsDisplay` widget that shows the 4 words for a team using `WordCard` widgets.
 - [ ] Create a `ClueInputWidget` with a `TextField` and a "Submit" button for the clue-giver.
 - [ ] Create a `GuessingWidget` for the guessing team to see clues and input their guess.

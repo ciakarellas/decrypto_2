@@ -9,7 +9,7 @@ class AppTheme {
     colorScheme: ColorScheme.dark(
       primary: Colors.white,
       secondary: Colors.tealAccent,
-      surface: Colors.grey.shade900,
+      surface: Colors.grey.shade800, // Added for card backgrounds
     ),
     textTheme: const TextTheme(
       bodyLarge: TextStyle(color: Colors.white),
