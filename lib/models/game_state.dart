@@ -1,18 +1,15 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:decrypto_2/models/team.dart';
-
 enum GameStatus { initial, playing, finished }
-
-enum TurnPhase { clueGiving, interceptGuessing, teamGuessing, roundEnd }
 
 class GameState extends Equatable {
   const GameState({
-    required this.teams,
-    required this.currentRound,
     required this.status,
-    required this.activeTeamIndex,
-    required this.turnPhase,
+    required this.secretWords,
+    required this.clueHistory,
+    required this.playerScore,
+    required this.playerLives,
+    required this.currentRound,
     required this.currentCode,
     required this.currentClues,
     required this.codeDeck,
@@ -20,42 +17,46 @@ class GameState extends Equatable {
 
   factory GameState.initial() {
     return const GameState(
-      teams: [],
-      currentRound: 0,
       status: GameStatus.initial,
-      activeTeamIndex: 0,
-      turnPhase: TurnPhase.clueGiving,
+      secretWords: [],
+      clueHistory: {},
+      playerScore: 0,
+      playerLives: 2, // Player starts with 2 lives (for 2 wrong guesses)
+      currentRound: 0,
       currentCode: '',
       currentClues: [],
       codeDeck: [],
     );
   }
 
-  final List<Team> teams;
-  final int currentRound;
   final GameStatus status;
-  final int activeTeamIndex;
-  final TurnPhase turnPhase;
+  final List<String> secretWords;
+  final Map<int, List<String>> clueHistory;
+  final int playerScore;
+  final int playerLives;
+  final int currentRound;
   final String currentCode;
   final List<String> currentClues;
   final List<String> codeDeck;
 
   GameState copyWith({
-    List<Team>? teams,
-    int? currentRound,
     GameStatus? status,
-    int? activeTeamIndex,
-    TurnPhase? turnPhase,
+    List<String>? secretWords,
+    Map<int, List<String>>? clueHistory,
+    int? playerScore,
+    int? playerLives,
+    int? currentRound,
     String? currentCode,
     List<String>? currentClues,
     List<String>? codeDeck,
   }) {
     return GameState(
-      teams: teams ?? this.teams,
-      currentRound: currentRound ?? this.currentRound,
       status: status ?? this.status,
-      activeTeamIndex: activeTeamIndex ?? this.activeTeamIndex,
-      turnPhase: turnPhase ?? this.turnPhase,
+      secretWords: secretWords ?? this.secretWords,
+      clueHistory: clueHistory ?? this.clueHistory,
+      playerScore: playerScore ?? this.playerScore,
+      playerLives: playerLives ?? this.playerLives,
+      currentRound: currentRound ?? this.currentRound,
       currentCode: currentCode ?? this.currentCode,
       currentClues: currentClues ?? this.currentClues,
       codeDeck: codeDeck ?? this.codeDeck,
@@ -64,11 +65,12 @@ class GameState extends Equatable {
 
   @override
   List<Object?> get props => [
-    teams,
-    currentRound,
     status,
-    activeTeamIndex,
-    turnPhase,
+    secretWords,
+    clueHistory,
+    playerScore,
+    playerLives,
+    currentRound,
     currentCode,
     currentClues,
     codeDeck,

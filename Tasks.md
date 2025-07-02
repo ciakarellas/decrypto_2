@@ -1,10 +1,10 @@
 # Decrypto Game Development Tasks
 
-This file tracks the development tasks for the Decrypto game, based on the `prd.md`.
+This file tracks the development tasks for the Decrypto game. The core loop is: AI gives clues, the user guesses the code.
 
 ## Phase 1: Core Gameplay MVP
 
-### 🚀 Project Setup & Foundation
+### 🚀 Project Setup & Foundation (Completed)
 - [x] Initialize a new Flutter project and clean up the default counter app.
 - [x] Set up the directory structure (`models`, `viewmodels`, `views/screens`, `views/widgets`, `services`, `utils`) as per `GEMINI.md`.
 - [x] Add core dependencies to `pubspec.yaml`: `flutter_bloc`, `provider`, `equatable`.
@@ -12,35 +12,29 @@ This file tracks the development tasks for the Decrypto game, based on the `prd.
 - [x] Set up basic app routing with placeholder screens for home, game, and settings.
 
 ### 🎨 UI - Screens & Navigation
-- [x] Create a `HomeScreen` widget with "Start Game" and "Settings" buttons.
-- [x] Create a placeholder `SettingsScreen` widget accessible from the `HomeScreen`.
-- [x] Create a placeholder `GameScreen` widget that will host the main gameplay.
-- [x] Create a placeholder `EndGameScreen` to show the final score and a "Play Again" button.
-- [x] Implement simple navigation to move between Home -> Game -> EndGame screens.
+- [ ] Update `EndGameScreen` to show a final player score (not team-based).
+- [ ] Refactor `GameScreen` to use `BlocProvider` and `BlocBuilder` to connect to the `GameCubit`.
 
 ### 🧱 Core Models
-- [x] Create a `player.dart` model with `id`, `name`, and `isAI` properties.
-- [x] Create a `team.dart` model containing a list of `Player`s and a list of 4 secret words (as strings).
-- [x] Create a `game_state.dart` model to hold the overall game information (e.g., list of teams, current round number, game status).
-- [x] Create a `word_service.dart` that provides a hardcoded list of words for the game.
+- [x] **[REFACTOR]** Remove `team.dart` and `player.dart` models as they are no longer needed.
+- [x] **[REFACTOR]** Rewrite `game_state.dart` to hold the state for a single player: `secretWords`, `clueHistory`, `playerScore`, `playerLives`, `currentCode`, `gameStatus`, etc.
+- [ ] Create `main_word.dart` model to group a word with its hints.
+- [ ] Create `game_set.dart` model to represent a playable set of words and codes.
 
 ### 🧠 Game Logic & State Management (Cubit)
-- [x] Create a `GameCubit` to manage the `GameState`.
-- [x] Implement a `startGame` method in `GameCubit` to initialize a single-player game (1 human vs 1 AI team).
-- [x] In the `startGame` method, randomly assign 4 words to each team from the `WordService`.
-- [x] Implement a `submitClue` method in `GameCubit` that takes a clue from the user.
-- [x] Implement a `submitGuess` method in `GameCubit` to handle the player's guess.
-- [x] Implement basic score update logic within the `GameCubit`.
+- [x] **[REFACTOR]** Rewrite `GameCubit` to manage the new `GameState`.
+- [x] **[REFACTOR]** Rewrite `startGame` method: it should get a `GameSet`, set the `secretWords`, initialize `playerScore` and `playerLives`, and trigger the first AI turn.
+- [x] **[REFACTOR]** Rewrite `submitGuess` method: it should take the player's code guess, check correctness, update score or lives, and trigger the next round.
+- [x] Implement a `_triggerAITurn` private method in `GameCubit` that uses the `AIService` to get clues and updates the state.
 
 ### 🧩 UI - Gameplay Widgets
-- [x] Create a `WordCard` widget to display a single word, including a state to show it as hidden.
-- [ ] Create a `TeamWordsDisplay` widget that shows the 4 words for a team using `WordCard` widgets.
-- [ ] Create a `ClueInputWidget` with a `TextField` and a "Submit" button for the clue-giver.
-- [ ] Create a `GuessingWidget` for the guessing team to see clues and input their guess.
-- [ ] Create a `ScoreboardWidget` to display the current score for both teams.
+- [x] Create a `SecretWordsDisplay` widget that shows the 4 secret words using `WordCard` widgets.
+- [ ] Create a `ClueHistoryDisplay` widget to show the clues given by the AI for each word.
+- [ ] Create a `CodeInputWidget` for the player to input their 3-digit guess.
+- [ ] Create a `PlayerStatusWidget` to display the current score and remaining lives.
+- [ ] **[REFACTOR]** Connect all new gameplay widgets within the `GameScreen` to display data from the `GameCubit`.
 
 ### 🤖 Basic AI
-- [ ] Create a basic `AIService` class.
-- [ ] Implement a method in `AIService` to generate a simple, random clue for one of its words.
-- [ ] Implement a method in `AIService` to make a random guess based on the player's clues.
-- [ ] Integrate the `AIService` into the `GameCubit` to trigger AI actions on its turn.
+- [x] Create a basic `AIService` class.
+- [x] Implement a method in `AIService` to generate 3 clues based on a given code and word set (e.g., `getCluesForCode(String code, List<MainWord> words)`). For the MVP, this can just be selecting a random hint.
+- [x] Integrate the `AIService` into the `GameCubit` so it can be called each round to generate new clues.

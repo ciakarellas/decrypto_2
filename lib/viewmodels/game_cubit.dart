@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:decrypto_2/models/game_state.dart';
 import 'package:decrypto_2/models/main_word.dart';
-import 'package:decrypto_2/models/player.dart';
-import 'package:decrypto_2/models/team.dart';
+// import 'package:decrypto_2/models/player.dart';
+// import 'package:decrypto_2/models/team.dart';
 import 'package:decrypto_2/services/word_service.dart';
 
 class GameCubit extends Cubit<GameState> {
