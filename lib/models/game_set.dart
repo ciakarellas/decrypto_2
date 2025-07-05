@@ -1,12 +1,8 @@
-import 'package:decrypto_2/models/main_word.dart';
-import 'package:equatable/equatable.dart';
+import 'main_word.dart';
 
-class GameSet extends Equatable {
-  const GameSet({required this.mainWords, required this.codes});
-
-  final List<MainWord> mainWords;
+class GameSet {
+  final List<MainWord> words;
   final List<String> codes;
 
-  @override
-  List<Object?> get props => [mainWords, codes];
+  GameSet({required this.words, required this.codes});
 }

@@ -21,7 +21,7 @@ class WordService {
     // Game Set 1: Fantasy / Adventure
     GameSet(
       codes: _codes,
-      mainWords: [
+      words: [
         MainWord(
           word: 'CASTLE',
           hints: [
@@ -79,7 +79,7 @@ class WordService {
     // Game Set 2: Space / Sci-Fi
     GameSet(
       codes: _codes,
-      mainWords: [
+      words: [
         MainWord(
           word: 'GALAXY',
           hints: [
@@ -137,7 +137,7 @@ class WordService {
     // Game Set 3: Egypt / Desert
     GameSet(
       codes: _codes,
-      mainWords: [
+      words: [
         MainWord(
           word: 'PYRAMID',
           hints: [

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class EndGameScreen extends StatelessWidget {
-  const EndGameScreen({super.key});
+  final int finalScore;
+  const EndGameScreen({super.key, required this.finalScore});
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +15,9 @@ class EndGameScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Final Score: 0 - 0', // Placeholder score
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            Text(
+              'Final Score: $finalScore', // Placeholder score
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 40),
             ElevatedButton(

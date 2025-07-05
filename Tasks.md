@@ -13,7 +13,7 @@ This file tracks the development tasks for the Decrypto game. The core loop is: 
 
 ### 🎨 UI - Screens & Navigation
 - [ ] Update `EndGameScreen` to show a final player score (not team-based).
-- [ ] Refactor `GameScreen` to use `BlocProvider` and `BlocBuilder` to connect to the `GameCubit`.
+- [x] Refactor `GameScreen` to use `BlocProvider` and `BlocBuilder` to connect to the `GameCubit`.
 
 ### 🧱 Core Models
 - [x] **[REFACTOR]** Remove `team.dart` and `player.dart` models as they are no longer needed.
@@ -22,10 +22,10 @@ This file tracks the development tasks for the Decrypto game. The core loop is: 
 - [ ] Create `game_set.dart` model to represent a playable set of words and codes.
 
 ### 🧠 Game Logic & State Management (Cubit)
-- [x] **[REFACTOR]** Rewrite `GameCubit` to manage the new `GameState`.
-- [x] **[REFACTOR]** Rewrite `startGame` method: it should get a `GameSet`, set the `secretWords`, initialize `playerScore` and `playerLives`, and trigger the first AI turn.
-- [x] **[REFACTOR]** Rewrite `submitGuess` method: it should take the player's code guess, check correctness, update score or lives, and trigger the next round.
-- [x] Implement a `_triggerAITurn` private method in `GameCubit` that uses the `AIService` to get clues and updates the state.
+- [ ] **[REFACTOR]** Rewrite `GameCubit` to manage the new `GameState`.
+- [ ] **[REFACTOR]** Rewrite `startGame` method: it should get a `GameSet`, set the `secretWords`, initialize `playerScore` and `playerLives`, and trigger the first AI turn.
+- [ ] **[REFACTOR]** Rewrite `submitGuess` method: it should take the player's code guess, check correctness, update score or lives, and trigger the next round.
+- [ ] Implement a `_triggerAITurn` private method in `GameCubit` that uses the `AIService` to get clues and updates the state.
 
 ### 🧩 UI - Gameplay Widgets
 - [x] Create a `SecretWordsDisplay` widget that shows the 4 secret words using `WordCard` widgets.
