@@ -43,29 +43,10 @@ class GameScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                PlayerStatusWidget(
-                  score: state.playerScore,
-                  lives: state.playerLives,
-                ),
-                const SizedBox(height: 20),
                 SecretWordsDisplay(
                   secretWords: state.secretWords.map((e) => e.word).toList(),
                 ),
-                const SizedBox(height: 20),
-                Expanded(
-                  child: ClueHistoryDisplay(clueHistory: state.clueHistory),
-                ),
-                const SizedBox(height: 20),
-                if (state.currentClues.isNotEmpty)
-                  Text(
-                    'Current Clues: ${state.currentClues.join(', ')}',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                const SizedBox(height: 20),
+                const Spacer(),
                 CodeInputWidget(
                   onSubmit: (guess) {
                     context.read<GameCubit>().submitGuess(guess);
