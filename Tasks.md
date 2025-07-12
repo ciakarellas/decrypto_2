@@ -38,3 +38,36 @@ This file tracks the development tasks for the Decrypto game. The core loop is: 
 - [x] Create a basic `AIService` class.
 - [x] Implement a method in `AIService` to generate 3 clues based on a given code and word set (e.g., `getCluesForCode(String code, List<MainWord> words)`). For the MVP, this can just be selecting a random hint.
 - [x] Integrate the `AIService` into the `GameCubit` so it can be called each round to generate new clues.
+
+## Phase 2: MVP Clue System Refactor ✅ **COMPLETED**
+
+### 🔄 Replace AI with Deterministic Clue System
+- [x] **[REFACTOR]** Create new `ClueService` class in `lib/services/clue_service.dart` to replace `AIService`.
+- [x] Implement clue tracking mechanism that tracks usage per word without modifying original data.
+- [x] Implement `getCluesForCode(String code, List<MainWord> mainWords)` method that uses clues in order (1st, 2nd, 3rd, etc.) based on usage tracking.
+- [x] Create deep copy mechanism to preserve original word data integrity.
+- [x] Add reset functionality for starting new games with fresh clue tracking.
+
+### 🎲 Code Generation System
+- [x] Implement code shuffling mechanism that generates 3 unique numbers from 1-4.
+- [x] Create algorithm to shuffle [1, 2, 3, 4] and take first 3 numbers to form code string.
+- [x] **[REFACTOR]** Replace predefined codes in `WordService` with dynamic code generation.
+- [x] Integrate new code generation into `GameCubit` workflow.
+
+### 📊 Word Service Enhancement
+- [x] **[REFACTOR]** Expand `WordService` to support 10 predefined game sets (currently has 3).
+- [x] Create empty template structure for 7 additional game sets.
+- [x] Maintain existing game set format for consistency.
+- [x] Keep `getNewGameSet()` method compatible with new code generation.
+
+### 🔗 Dependency Updates
+- [x] **[REFACTOR]** Update `GameCubit` to use `ClueService` instead of `AIService`.
+- [x] **[REFACTOR]** Update `main.dart` to instantiate `ClueService()` instead of `AIService()`.
+- [x] Remove `ai_service.dart` file completely.
+- [x] Update import statements across affected files.
+
+### 🧪 Testing & Validation
+- [x] Verify clue selection logic works correctly (e.g., code "143" → clue[0] from word 1, clue[0] from word 4, clue[0] from word 3).
+- [x] Test clue progression across multiple rounds (e.g., second usage of word increments clue index).
+- [x] Validate that original game set data remains unmodified.
+- [x] Test game reset functionality with fresh clue tracking.

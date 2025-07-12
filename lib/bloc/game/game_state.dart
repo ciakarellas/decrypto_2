@@ -9,7 +9,8 @@ class GameState extends Equatable {
     this.secretWords = const [],
     this.clueHistory = const {},
     this.playerScore = 0,
-    this.playerLives = 2,
+    this.roundCount = 0,
+    this.successfulGuesses = 0,
     this.currentCode,
     this.currentClues = const [],
   });
@@ -18,7 +19,8 @@ class GameState extends Equatable {
   final List<MainWord> secretWords;
   final Map<int, List<String>> clueHistory;
   final int playerScore;
-  final int playerLives;
+  final int roundCount;
+  final int successfulGuesses;
   final String? currentCode;
   final List<String> currentClues;
 
@@ -27,7 +29,8 @@ class GameState extends Equatable {
     List<MainWord>? secretWords,
     Map<int, List<String>>? clueHistory,
     int? playerScore,
-    int? playerLives,
+    int? roundCount,
+    int? successfulGuesses,
     String? currentCode,
     List<String>? currentClues,
   }) {
@@ -36,7 +39,8 @@ class GameState extends Equatable {
       secretWords: secretWords ?? this.secretWords,
       clueHistory: clueHistory ?? this.clueHistory,
       playerScore: playerScore ?? this.playerScore,
-      playerLives: playerLives ?? this.playerLives,
+      roundCount: roundCount ?? this.roundCount,
+      successfulGuesses: successfulGuesses ?? this.successfulGuesses,
       currentCode: currentCode ?? this.currentCode,
       currentClues: currentClues ?? this.currentClues,
     );
@@ -44,12 +48,13 @@ class GameState extends Equatable {
 
   @override
   List<Object?> get props => [
-        status,
-        secretWords,
-        clueHistory,
-        playerScore,
-        playerLives,
-        currentCode,
-        currentClues,
-      ];
+    status,
+    secretWords,
+    clueHistory,
+    playerScore,
+    roundCount,
+    successfulGuesses,
+    currentCode,
+    currentClues,
+  ];
 }

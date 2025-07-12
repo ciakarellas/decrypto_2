@@ -7,7 +7,7 @@ import 'package:decrypto_2/views/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:decrypto_2/bloc/game/game_cubit.dart';
-import 'package:decrypto_2/services/ai_service.dart';
+import 'package:decrypto_2/services/clue_service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,8 +26,8 @@ class MyApp extends StatelessWidget {
         '/': (context) => const HomeScreen(),
         '/game': (context) => BlocProvider(
           create: (context) => GameCubit(
-            // The GameCubit constructor expects an AIService, not a WordService.
-            AIService(), // No change needed here, AIService is correctly imported and used.
+            // The GameCubit constructor now expects a ClueService for deterministic clue tracking.
+            ClueService(),
           )..startGame(WordService().getNewGameSet()),
           child: const GameScreen(),
         ),

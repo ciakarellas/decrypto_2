@@ -14,7 +14,9 @@ class WordCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: theme.colorScheme.secondary.withOpacity(0.5)),
+        border: Border.all(
+          color: theme.colorScheme.secondary.withValues(alpha: 0.5),
+        ),
       ),
       child: Text(
         isHidden ? '****' : word,

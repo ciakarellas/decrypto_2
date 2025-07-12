@@ -10,27 +10,37 @@ class CodeInputWidget extends StatefulWidget {
 }
 
 class _CodeInputWidgetState extends State<CodeInputWidget> {
-  String _currentCode = '';
+  final List<String> _selectedNumbers = [];
 
-  void _addNumber(String number) {
-    if (_currentCode.length < 3) {
-      setState(() {
-        _currentCode += number;
-      });
-    }
-  }
-
-  void _clearCode() {
+  void _toggleNumber(String number) {
     setState(() {
-      _currentCode = '';
+      if (_selectedNumbers.contains(number)) {
+        // Remove number if already selected
+        _selectedNumbers.remove(number);
+      } else if (_selectedNumbers.length < 3) {
+        // Add number if less than 3 are selected
+        _selectedNumbers.add(number);
+      }
+
+      // Auto-submit when exactly 3 numbers are selected
+      if (_selectedNumbers.length == 3) {
+        final code = _selectedNumbers.join();
+        widget.onSubmit(code);
+      }
     });
   }
 
-  void _submitCode() {
-    if (_currentCode.length == 3) {
-      widget.onSubmit(_currentCode);
-      _clearCode();
+  bool _isSelected(String number) {
+    return _selectedNumbers.contains(number);
+  }
+
+  String _getDisplayCode() {
+    if (_selectedNumbers.isEmpty) {
+      return 'Select 3 numbers';
     }
+
+    final code = _selectedNumbers.join();
+    return code.padRight(3, '_');
   }
 
   @override
@@ -40,66 +50,81 @@ class _CodeInputWidgetState extends State<CodeInputWidget> {
       children: [
         // Display current code
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           margin: const EdgeInsets.only(bottom: 20),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.outline,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(12),
+            color: Theme.of(context).colorScheme.surface,
           ),
           child: Text(
-            _currentCode.isEmpty ? 'Enter Code' : _currentCode.padRight(3, '_'),
-            style: const TextStyle(fontSize: 24, letterSpacing: 8),
+            _getDisplayCode(),
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              letterSpacing: 8,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
           ),
         ),
-        // Number buttons row
+        // Number buttons in a grid layout
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildNumberButton('1'),
-            _buildNumberButton('2'),
-            _buildNumberButton('3'),
-            _buildNumberButton('4'),
+            _buildToggleButton('1'),
+            _buildToggleButton('2'),
+            _buildToggleButton('3'),
+            _buildToggleButton('4'),
           ],
         ),
-        const SizedBox(height: 20),
-        // Action buttons row
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            // Clear button
-            ElevatedButton(
-              onPressed: _currentCode.isNotEmpty ? _clearCode : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-              ),
-              child: const Icon(Icons.clear),
-            ),
-            // Submit button (tick)
-            ElevatedButton(
-              onPressed: _currentCode.length == 3 ? _submitCode : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
-              ),
-              child: const Icon(Icons.check),
-            ),
-          ],
+        const SizedBox(height: 16),
+        // Instructions
+        Text(
+          'Select exactly 3 numbers',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.7),
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildNumberButton(String number) {
-    return ElevatedButton(
-      onPressed: () => _addNumber(number),
-      style: ElevatedButton.styleFrom(
-        minimumSize: const Size(60, 60),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-      ),
-      child: Text(
-        number,
-        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+  Widget _buildToggleButton(String number) {
+    final isSelected = _isSelected(number);
+    final canSelect = _selectedNumbers.length < 3 || isSelected;
+
+    return SizedBox(
+      width: 70,
+      height: 70,
+      child: ElevatedButton(
+        onPressed: canSelect ? () => _toggleNumber(number) : null,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isSelected
+              ? Colors.green
+              : Theme.of(context).colorScheme.surface,
+          foregroundColor: isSelected
+              ? Colors.white
+              : Theme.of(context).colorScheme.onSurface,
+          elevation: isSelected ? 8 : 2,
+          shadowColor: isSelected ? Colors.green.withValues(alpha: 0.5) : null,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          side: BorderSide(
+            color: isSelected
+                ? Colors.green
+                : Theme.of(context).colorScheme.outline,
+            width: 2,
+          ),
+        ),
+        child: Text(
+          number,
+          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }

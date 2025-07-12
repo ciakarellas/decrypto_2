@@ -1,10 +1,7 @@
 import 'package:decrypto_2/bloc/game/game_state.dart';
-import 'package:decrypto_2/models/main_word.dart';
 import 'package:decrypto_2/bloc/game/game_cubit.dart';
 import 'package:decrypto_2/views/screens/end_game_screen.dart';
-import 'package:decrypto_2/views/widgets/clue_history_display.dart';
 import 'package:decrypto_2/views/widgets/code_input_widget.dart';
-import 'package:decrypto_2/views/widgets/player_status_widget.dart';
 import 'package:decrypto_2/views/widgets/secret_words_display.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,6 +42,60 @@ class GameScreen extends StatelessWidget {
               children: [
                 SecretWordsDisplay(
                   secretWords: state.secretWords.map((e) => e.word).toList(),
+                  showWords:
+                      false, // Words are hidden initially as per Decrypto rules
+                  clueHistory: state.clueHistory,
+                ),
+                const Spacer(),
+                // Round button in the center
+                Center(
+                  child: Container(
+                    width: 120,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Theme.of(context).primaryColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(60),
+                        onTap: () {},
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'ROUND',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.2,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${state.roundCount + 1}',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
                 const Spacer(),
                 CodeInputWidget(
