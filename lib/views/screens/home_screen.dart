@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:decrypto_2/bloc/game/game_cubit.dart';
+import 'package:decrypto_2/services/clue_service.dart';
+import 'package:decrypto_2/services/word_service.dart';
+import 'package:decrypto_2/views/screens/game_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -12,7 +17,20 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, '/game'),
+              onPressed: () {
+                // Create GameCubit and navigate to game screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) =>
+                          GameCubit(ClueService())
+                            ..startGame(WordService().getNewGameSet()),
+                      child: const GameScreen(),
+                    ),
+                  ),
+                );
+              },
               child: const Text('Start Game'),
             ),
             const SizedBox(height: 20),

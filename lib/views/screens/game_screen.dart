@@ -99,18 +99,27 @@ class GameScreen extends StatelessWidget {
                       children: [
                         HintDisplay(
                           label: 'Hint 1',
+                          hint: state.currentClues.isNotEmpty
+                              ? state.currentClues[0]
+                              : null,
                           onTap: () {
                             // Handle hint 1 tap
                           },
                         ),
                         HintDisplay(
                           label: 'Hint 2',
+                          hint: state.currentClues.length > 1
+                              ? state.currentClues[1]
+                              : null,
                           onTap: () {
                             // Handle hint 2 tap
                           },
                         ),
                         HintDisplay(
                           label: 'Hint 3',
+                          hint: state.currentClues.length > 2
+                              ? state.currentClues[2]
+                              : null,
                           onTap: () {
                             // Handle hint 3 tap
                           },
@@ -133,7 +142,7 @@ class GameScreen extends StatelessWidget {
                                 ? state.secretWords[0].word
                                 : '',
                             showWord: false,
-                            hints: state.clueHistory[1] ?? [],
+                            hints: state.clueHistory[0] ?? [],
                             onTap: () {
                               // Handle tap on word 1
                             },
@@ -147,7 +156,7 @@ class GameScreen extends StatelessWidget {
                                 ? state.secretWords[1].word
                                 : '',
                             showWord: false,
-                            hints: state.clueHistory[2] ?? [],
+                            hints: state.clueHistory[1] ?? [],
                             onTap: () {
                               // Handle tap on word 2
                             },
@@ -166,7 +175,7 @@ class GameScreen extends StatelessWidget {
                                 ? state.secretWords[2].word
                                 : '',
                             showWord: false,
-                            hints: state.clueHistory[3] ?? [],
+                            hints: state.clueHistory[2] ?? [],
                             onTap: () {
                               // Handle tap on word 3
                             },
@@ -180,7 +189,7 @@ class GameScreen extends StatelessWidget {
                                 ? state.secretWords[3].word
                                 : '',
                             showWord: false,
-                            hints: state.clueHistory[4] ?? [],
+                            hints: state.clueHistory[3] ?? [],
                             onTap: () {
                               // Handle tap on word 4
                             },

@@ -24,13 +24,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const HomeScreen(),
-        '/game': (context) => BlocProvider(
-          create: (context) => GameCubit(
-            // The GameCubit constructor now expects a ClueService for deterministic clue tracking.
-            ClueService(),
-          )..startGame(WordService().getNewGameSet()),
-          child: const GameScreen(),
-        ),
+        '/game': (context) => const GameScreen(),
         '/settings': (context) => const SettingsScreen(),
         '/endgame': (context) => BlocProvider.value(
           value: BlocProvider.of<GameCubit>(context),

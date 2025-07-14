@@ -613,7 +613,9 @@ class WordService {
   /// Returns a random, complete [GameSet] for a new game with dynamically generated codes.
   GameSet getNewGameSet() {
     final random = Random();
-    final selectedGameSet = _gameSets[random.nextInt(_gameSets.length)];
+    // Only select from the first 3 complete game sets (indices 0, 1, 2)
+    // Game sets 3-9 contain placeholder data
+    final selectedGameSet = _gameSets[random.nextInt(3)];
 
     // Generate fresh codes for this game
     final generatedCodes = _generateCodes();

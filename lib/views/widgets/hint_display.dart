@@ -24,18 +24,8 @@ class HintDisplay extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.lightbulb_outline,
-              size: 32,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              label,
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-            ),
+            // Reserved space where icon was (keep for future use)
+            const SizedBox(height: 32),
             const SizedBox(height: 8),
             // Display actual hint or placeholder
             if (hint != null && hint!.isNotEmpty)
