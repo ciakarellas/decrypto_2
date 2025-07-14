@@ -2,6 +2,7 @@ import 'package:decrypto_2/bloc/game/game_state.dart';
 import 'package:decrypto_2/bloc/game/game_cubit.dart';
 import 'package:decrypto_2/views/screens/end_game_screen.dart';
 import 'package:decrypto_2/views/widgets/secret_words_display.dart';
+import 'package:decrypto_2/views/widgets/hint_display.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -49,7 +50,7 @@ class GameScreen extends StatelessWidget {
                       color: Theme.of(context).primaryColor,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
+                          color: Colors.black.withValues(alpha: 0.2),
                           blurRadius: 8,
                           offset: const Offset(0, 4),
                         ),
@@ -96,9 +97,24 @@ class GameScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        _buildHintDisplay(context, 'Hint 1'),
-                        _buildHintDisplay(context, 'Hint 2'),
-                        _buildHintDisplay(context, 'Hint 3'),
+                        HintDisplay(
+                          label: 'Hint 1',
+                          onTap: () {
+                            // Handle hint 1 tap
+                          },
+                        ),
+                        HintDisplay(
+                          label: 'Hint 2',
+                          onTap: () {
+                            // Handle hint 2 tap
+                          },
+                        ),
+                        HintDisplay(
+                          label: 'Hint 3',
+                          onTap: () {
+                            // Handle hint 3 tap
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -178,47 +194,6 @@ class GameScreen extends StatelessWidget {
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildHintDisplay(BuildContext context, String label) {
-    return Container(
-      width: 100,
-      height: 120,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.lightbulb_outline,
-            size: 32,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 8),
-          // Placeholder for hint content
-          Container(
-            width: 60,
-            height: 20,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ),
-        ],
       ),
     );
   }
