@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 
 class HintDisplay extends StatelessWidget {
-  const HintDisplay({super.key, required this.label, this.hint, this.onTap});
+  const HintDisplay({
+    super.key,
+    required this.label,
+    this.hint,
+    this.onTap,
+    this.selectedNumber,
+    this.isCorrect,
+  });
 
   final String label;
   final String? hint;
   final VoidCallback? onTap;
+  final int? selectedNumber;
+  final bool? isCorrect;
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +33,20 @@ class HintDisplay extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Reserved space where icon was (keep for future use)
-            const SizedBox(height: 32),
+            // Show selected number with color coding
+            if (selectedNumber != null)
+              Text(
+                '$selectedNumber',
+                style: TextStyle(
+                  color: isCorrect != null
+                      ? (isCorrect! ? Colors.green : Colors.red)
+                      : Theme.of(context).colorScheme.primary,
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+            else
+              const SizedBox(height: 32),
             const SizedBox(height: 8),
             // Display actual hint or placeholder
             if (hint != null && hint!.isNotEmpty)

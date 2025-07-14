@@ -26,6 +26,9 @@ class GameCubit extends Cubit<GameState> {
         roundCount: 0,
         successfulGuesses: 0,
         playerScore: 0,
+        selectedNumbers: const [],
+        showingResults: false,
+        lastCorrectCode: null,
       ),
     );
 
@@ -45,8 +48,8 @@ class GameCubit extends Cubit<GameState> {
       final firstHint = _secretWords[i].hints[0];
       initialClueHistory[i] = [firstHint];
 
-      // Update clue service usage count so it knows hint[0] was used
-      _clueService.getUsageCount()[i] = 1;
+      // Mark hint index 0 as used for this word
+      _clueService.setHintUsed(i, 0);
     }
 
     emit(state.copyWith(clueHistory: initialClueHistory));
@@ -57,24 +60,16 @@ class GameCubit extends Cubit<GameState> {
 
     final newRoundCount = state.roundCount + 1;
 
-    // If this is the first guess or we need a new code, generate one first
-    String codeToCheck;
-    if (state.currentCode == null) {
-      // First guess - generate the code now
-      if (_codeDeck.isEmpty) {
-        emit(state.copyWith(status: GameStatus.finished));
-        return;
-      }
-      codeToCheck = _codeDeck.removeAt(0);
-    } else {
-      // Use existing code
-      codeToCheck = state.currentCode!;
+    // Always generate a new code for each round
+    if (_codeDeck.isEmpty) {
+      emit(state.copyWith(status: GameStatus.finished));
+      return;
     }
+    final codeToCheck = _codeDeck.removeAt(0);
 
     final isCorrect = guess == codeToCheck;
 
-    // After user attempts guess, add decode clues to clue history
-    _addCurrentCluesToHistory();
+    // Don't add clues to history yet - wait for user to press START
 
     if (isCorrect) {
       // Correct guess: increase score and successful guesses
@@ -98,14 +93,19 @@ class GameCubit extends Cubit<GameState> {
           playerScore: state.playerScore + 1,
           successfulGuesses: newSuccessfulGuesses,
           roundCount: newRoundCount,
+          showingResults: true,
+          lastCorrectCode: codeToCheck,
         ),
       );
-
-      // Generate new code for next round
-      _triggerAITurn();
     } else {
-      // Incorrect guess: just increment round count
-      emit(state.copyWith(roundCount: newRoundCount));
+      // Incorrect guess: increment round count and show results
+      emit(
+        state.copyWith(
+          roundCount: newRoundCount,
+          showingResults: true,
+          lastCorrectCode: codeToCheck,
+        ),
+      );
 
       // Check lose condition: 8 rounds completed without 2 wins
       final currentSuccessfulGuesses = state.successfulGuesses;
@@ -113,31 +113,53 @@ class GameCubit extends Cubit<GameState> {
         emit(state.copyWith(status: GameStatus.finished));
         return;
       }
-
-      // Keep showing the same code for next guess attempt
     }
   }
 
-  /// Adds the current decode clues to clue history so they appear in SecretWordsDisplay
-  void _addCurrentCluesToHistory() {
-    if (state.currentCode == null || state.currentClues.isEmpty) return;
+  /// Starts the next round after user presses START button
+  void startNextRound() {
+    if (!state.showingResults) return;
 
-    final code = state.currentCode!;
-    final clues = state.currentClues;
+    // First, add the decode clues from previous round to clue history
+    // This shows user which words the code referred to
+    if (state.currentCode != null && state.currentClues.isNotEmpty) {
+      final code = state.currentCode!;
+      final clues = state.currentClues;
 
-    // Update clue history by adding decode clues
-    final newClueHistory = Map<int, List<String>>.from(state.clueHistory);
-    for (int i = 0; i < code.length; i++) {
-      final wordIndex = int.parse(code[i]) - 1;
-      final clue = clues[i];
-      // Get existing clues for this word and add the new one
-      final updatedCluesForWord = List<String>.from(
-        newClueHistory[wordIndex] ?? [],
-      )..add(clue);
-      newClueHistory[wordIndex] = updatedCluesForWord;
+      // Update clue history by adding decode clues
+      final newClueHistory = Map<int, List<String>>.from(state.clueHistory);
+      for (int i = 0; i < code.length; i++) {
+        final wordIndex = int.parse(code[i]) - 1;
+        final clue = clues[i];
+        // Get existing clues for this word and add the new one
+        final updatedCluesForWord = List<String>.from(
+          newClueHistory[wordIndex] ?? [],
+        )..add(clue);
+        newClueHistory[wordIndex] = updatedCluesForWord;
+      }
+
+      // Update state with new clue history and clear results in one go
+      emit(
+        state.copyWith(
+          clueHistory: newClueHistory,
+          showingResults: false,
+          lastCorrectCode: null,
+          selectedNumbers: const [],
+        ),
+      );
+    } else {
+      // Just clear results if no clues to add
+      emit(
+        state.copyWith(
+          showingResults: false,
+          lastCorrectCode: null,
+          selectedNumbers: const [],
+        ),
+      );
     }
 
-    emit(state.copyWith(clueHistory: newClueHistory));
+    // Then generate clues for the next round
+    _triggerAITurn();
   }
 
   void _showCluesForCode(String code) {
@@ -158,5 +180,36 @@ class GameCubit extends Cubit<GameState> {
     // Prepare for the new round
     final newCode = _codeDeck.removeAt(0);
     _showCluesForCode(newCode);
+  }
+
+  /// Handles user selection of a word number by tapping SecretWordsDisplay
+  void selectNumber(int wordNumber) {
+    if (state.status != GameStatus.playing) return;
+
+    final currentSelected = List<int>.from(state.selectedNumbers);
+
+    // Check if number is already selected
+    if (currentSelected.contains(wordNumber)) {
+      // Remove the number (toggle off)
+      currentSelected.remove(wordNumber);
+    } else {
+      // Add the number only if we have less than 3 numbers
+      if (currentSelected.length < 3) {
+        currentSelected.add(wordNumber);
+      }
+    }
+
+    emit(state.copyWith(selectedNumbers: currentSelected));
+
+    // If we now have 3 numbers, automatically submit the guess
+    if (currentSelected.length == 3) {
+      final guess = currentSelected.join('');
+      submitGuess(guess);
+    }
+  }
+
+  /// Clears the selected numbers (for reset functionality)
+  void clearSelection() {
+    emit(state.copyWith(selectedNumbers: const []));
   }
 }

@@ -13,6 +13,9 @@ class GameState extends Equatable {
     this.successfulGuesses = 0,
     this.currentCode,
     this.currentClues = const [],
+    this.selectedNumbers = const [],
+    this.showingResults = false,
+    this.lastCorrectCode,
   });
 
   final GameStatus status;
@@ -23,6 +26,9 @@ class GameState extends Equatable {
   final int successfulGuesses;
   final String? currentCode;
   final List<String> currentClues;
+  final List<int> selectedNumbers;
+  final bool showingResults;
+  final String? lastCorrectCode;
 
   GameState copyWith({
     GameStatus? status,
@@ -33,6 +39,9 @@ class GameState extends Equatable {
     int? successfulGuesses,
     String? currentCode,
     List<String>? currentClues,
+    List<int>? selectedNumbers,
+    bool? showingResults,
+    String? lastCorrectCode,
   }) {
     return GameState(
       status: status ?? this.status,
@@ -43,6 +52,9 @@ class GameState extends Equatable {
       successfulGuesses: successfulGuesses ?? this.successfulGuesses,
       currentCode: currentCode ?? this.currentCode,
       currentClues: currentClues ?? this.currentClues,
+      selectedNumbers: selectedNumbers ?? this.selectedNumbers,
+      showingResults: showingResults ?? this.showingResults,
+      lastCorrectCode: lastCorrectCode ?? this.lastCorrectCode,
     );
   }
 
@@ -56,5 +68,8 @@ class GameState extends Equatable {
     successfulGuesses,
     currentCode,
     currentClues,
+    selectedNumbers,
+    showingResults,
+    lastCorrectCode,
   ];
 }

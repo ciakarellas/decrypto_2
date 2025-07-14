@@ -47,7 +47,9 @@ class GameScreen extends StatelessWidget {
                     height: 120,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Theme.of(context).primaryColor,
+                      color: state.showingResults
+                          ? Colors.green
+                          : Theme.of(context).primaryColor,
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.2),
@@ -60,31 +62,45 @@ class GameScreen extends StatelessWidget {
                       color: Colors.transparent,
                       child: InkWell(
                         borderRadius: BorderRadius.circular(60),
-                        onTap: () {},
+                        onTap: () {
+                          if (state.showingResults) {
+                            context.read<GameCubit>().startNextRound();
+                          }
+                        },
                         child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'ROUND',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.2,
+                          child: state.showingResults
+                              ? Text(
+                                  'START',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.2,
+                                  ),
+                                )
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'ROUND',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 1.2,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      '${state.roundCount + 1}',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 32,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                '${state.roundCount + 1}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
                         ),
                       ),
                     ),
@@ -97,32 +113,127 @@ class GameScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        HintDisplay(
-                          label: 'Hint 1',
-                          hint: state.currentClues.isNotEmpty
-                              ? state.currentClues[0]
-                              : null,
-                          onTap: () {
-                            // Handle hint 1 tap
-                          },
+                        // Column 1: HintDisplay + Correct digit below
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if (state.showingResults &&
+                                state.lastCorrectCode != null &&
+                                state.lastCorrectCode!.isNotEmpty)
+                              Container(
+                                margin: const EdgeInsets.only(top: 8),
+                                child: Text(
+                                  state.lastCorrectCode![0],
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            HintDisplay(
+                              label: 'Hint 1',
+                              hint: state.currentClues.isNotEmpty
+                                  ? state.currentClues[0]
+                                  : null,
+                              selectedNumber: state.selectedNumbers.isNotEmpty
+                                  ? state.selectedNumbers[0]
+                                  : null,
+                              isCorrect:
+                                  state.showingResults &&
+                                      state.selectedNumbers.isNotEmpty &&
+                                      state.lastCorrectCode != null &&
+                                      state.lastCorrectCode!.isNotEmpty
+                                  ? state.selectedNumbers[0] ==
+                                        int.parse(state.lastCorrectCode![0])
+                                  : null,
+                              onTap: () {
+                                // Handle hint 1 tap
+                              },
+                            ),
+
+                            // Show correct digit below HintDisplay when showing results
+                          ],
                         ),
-                        HintDisplay(
-                          label: 'Hint 2',
-                          hint: state.currentClues.length > 1
-                              ? state.currentClues[1]
-                              : null,
-                          onTap: () {
-                            // Handle hint 2 tap
-                          },
+                        // Column 2: HintDisplay + Correct digit below
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if (state.showingResults &&
+                                state.lastCorrectCode != null &&
+                                state.lastCorrectCode!.length > 1)
+                              Container(
+                                margin: const EdgeInsets.only(top: 8),
+                                child: Text(
+                                  state.lastCorrectCode![1],
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            HintDisplay(
+                              label: 'Hint 2',
+                              hint: state.currentClues.length > 1
+                                  ? state.currentClues[1]
+                                  : null,
+                              selectedNumber: state.selectedNumbers.length > 1
+                                  ? state.selectedNumbers[1]
+                                  : null,
+                              isCorrect:
+                                  state.showingResults &&
+                                      state.selectedNumbers.length > 1 &&
+                                      state.lastCorrectCode != null &&
+                                      state.lastCorrectCode!.length > 1
+                                  ? state.selectedNumbers[1] ==
+                                        int.parse(state.lastCorrectCode![1])
+                                  : null,
+                              onTap: () {
+                                // Handle hint 2 tap
+                              },
+                            ),
+                          ],
                         ),
-                        HintDisplay(
-                          label: 'Hint 3',
-                          hint: state.currentClues.length > 2
-                              ? state.currentClues[2]
-                              : null,
-                          onTap: () {
-                            // Handle hint 3 tap
-                          },
+                        // Column 3: HintDisplay + Correct digit below
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if (state.showingResults &&
+                                state.lastCorrectCode != null &&
+                                state.lastCorrectCode!.length > 2)
+                              Container(
+                                margin: const EdgeInsets.only(top: 8),
+                                child: Text(
+                                  state.lastCorrectCode![2],
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            HintDisplay(
+                              label: 'Hint 3',
+                              hint: state.currentClues.length > 2
+                                  ? state.currentClues[2]
+                                  : null,
+                              selectedNumber: state.selectedNumbers.length > 2
+                                  ? state.selectedNumbers[2]
+                                  : null,
+                              isCorrect:
+                                  state.showingResults &&
+                                      state.selectedNumbers.length > 2 &&
+                                      state.lastCorrectCode != null &&
+                                      state.lastCorrectCode!.length > 2
+                                  ? state.selectedNumbers[2] ==
+                                        int.parse(state.lastCorrectCode![2])
+                                  : null,
+                              onTap: () {
+                                // Handle hint 3 tap
+                              },
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -143,9 +254,11 @@ class GameScreen extends StatelessWidget {
                                 : '',
                             showWord: false,
                             hints: state.clueHistory[0] ?? [],
-                            onTap: () {
-                              // Handle tap on word 1
-                            },
+                            onTap: state.showingResults
+                                ? null
+                                : () {
+                                    context.read<GameCubit>().selectNumber(1);
+                                  },
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -157,9 +270,11 @@ class GameScreen extends StatelessWidget {
                                 : '',
                             showWord: false,
                             hints: state.clueHistory[1] ?? [],
-                            onTap: () {
-                              // Handle tap on word 2
-                            },
+                            onTap: state.showingResults
+                                ? null
+                                : () {
+                                    context.read<GameCubit>().selectNumber(2);
+                                  },
                           ),
                         ),
                       ],
@@ -176,9 +291,11 @@ class GameScreen extends StatelessWidget {
                                 : '',
                             showWord: false,
                             hints: state.clueHistory[2] ?? [],
-                            onTap: () {
-                              // Handle tap on word 3
-                            },
+                            onTap: state.showingResults
+                                ? null
+                                : () {
+                                    context.read<GameCubit>().selectNumber(3);
+                                  },
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -190,9 +307,11 @@ class GameScreen extends StatelessWidget {
                                 : '',
                             showWord: false,
                             hints: state.clueHistory[3] ?? [],
-                            onTap: () {
-                              // Handle tap on word 4
-                            },
+                            onTap: state.showingResults
+                                ? null
+                                : () {
+                                    context.read<GameCubit>().selectNumber(4);
+                                  },
                           ),
                         ),
                       ],
