@@ -3,6 +3,7 @@ import 'package:decrypto_2/bloc/game/game_cubit.dart';
 import 'package:decrypto_2/views/screens/end_game_screen.dart';
 import 'package:decrypto_2/views/widgets/secret_words_display.dart';
 import 'package:decrypto_2/views/widgets/hint_display.dart';
+import 'package:decrypto_2/utils/responsive_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -36,15 +37,18 @@ class GameScreen extends StatelessWidget {
           }
 
           return Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: ResponsiveUtils.getResponsivePadding(
+              context,
+              const EdgeInsets.all(16.0),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // Round button at the top
                 Center(
                   child: Container(
-                    width: 120,
-                    height: 120,
+                    width: ResponsiveUtils.getRoundButtonSize(context),
+                    height: ResponsiveUtils.getRoundButtonSize(context),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: state.showingResults
@@ -61,7 +65,9 @@ class GameScreen extends StatelessWidget {
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        borderRadius: BorderRadius.circular(60),
+                        borderRadius: BorderRadius.circular(
+                          ResponsiveUtils.getRoundButtonSize(context) / 2,
+                        ),
                         onTap: () {
                           if (state.showingResults) {
                             context.read<GameCubit>().startNextRound();
@@ -73,7 +79,11 @@ class GameScreen extends StatelessWidget {
                                   'START',
                                   style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 18,
+                                    fontSize:
+                                        ResponsiveUtils.getResponsiveFontSize(
+                                          context,
+                                          18.0,
+                                        ),
                                     fontWeight: FontWeight.bold,
                                     letterSpacing: 1.2,
                                   ),
@@ -85,17 +95,31 @@ class GameScreen extends StatelessWidget {
                                       'ROUND',
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 16,
+                                        fontSize:
+                                            ResponsiveUtils.getResponsiveFontSize(
+                                              context,
+                                              16.0,
+                                            ),
                                         fontWeight: FontWeight.bold,
                                         letterSpacing: 1.2,
                                       ),
                                     ),
-                                    const SizedBox(height: 4),
+                                    SizedBox(
+                                      height:
+                                          ResponsiveUtils.getResponsiveSpacing(
+                                            context,
+                                            4.0,
+                                          ),
+                                    ),
                                     Text(
                                       '${state.roundCount + 1}',
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 32,
+                                        fontSize:
+                                            ResponsiveUtils.getResponsiveFontSize(
+                                              context,
+                                              32.0,
+                                            ),
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -106,7 +130,9 @@ class GameScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 40),
+                SizedBox(
+                  height: ResponsiveUtils.getResponsiveSpacing(context, 40.0),
+                ),
                 // Center section with 3 hint display areas
                 Expanded(
                   child: Center(
@@ -118,9 +144,19 @@ class GameScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              height:
-                                  46, // Fixed height to prevent layout shifts
-                              margin: const EdgeInsets.only(top: 8),
+                              height: ResponsiveUtils.getCorrectDigitHeight(
+                                context,
+                                ResponsiveUtils.getResponsiveFontSize(
+                                  context,
+                                  32.0,
+                                ),
+                              ),
+                              margin: EdgeInsets.only(
+                                top: ResponsiveUtils.getResponsiveSpacing(
+                                  context,
+                                  8.0,
+                                ),
+                              ),
                               child: Text(
                                 (state.showingResults &&
                                         state.lastCorrectCode != null &&
@@ -134,7 +170,11 @@ class GameScreen extends StatelessWidget {
                                           state.lastCorrectCode!.isNotEmpty)
                                       ? Colors.green
                                       : Colors.transparent,
-                                  fontSize: 32,
+                                  fontSize:
+                                      ResponsiveUtils.getResponsiveFontSize(
+                                        context,
+                                        32.0,
+                                      ),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -168,9 +208,19 @@ class GameScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              height:
-                                  46, // Fixed height to prevent layout shifts
-                              margin: const EdgeInsets.only(top: 8),
+                              height: ResponsiveUtils.getCorrectDigitHeight(
+                                context,
+                                ResponsiveUtils.getResponsiveFontSize(
+                                  context,
+                                  32.0,
+                                ),
+                              ),
+                              margin: EdgeInsets.only(
+                                top: ResponsiveUtils.getResponsiveSpacing(
+                                  context,
+                                  8.0,
+                                ),
+                              ),
                               child: Text(
                                 (state.showingResults &&
                                         state.lastCorrectCode != null &&
@@ -184,7 +234,11 @@ class GameScreen extends StatelessWidget {
                                           state.lastCorrectCode!.length > 1)
                                       ? Colors.green
                                       : Colors.transparent,
-                                  fontSize: 32,
+                                  fontSize:
+                                      ResponsiveUtils.getResponsiveFontSize(
+                                        context,
+                                        32.0,
+                                      ),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -216,9 +270,19 @@ class GameScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              height:
-                                  46, // Fixed height to prevent layout shifts
-                              margin: const EdgeInsets.only(top: 8),
+                              height: ResponsiveUtils.getCorrectDigitHeight(
+                                context,
+                                ResponsiveUtils.getResponsiveFontSize(
+                                  context,
+                                  32.0,
+                                ),
+                              ),
+                              margin: EdgeInsets.only(
+                                top: ResponsiveUtils.getResponsiveSpacing(
+                                  context,
+                                  8.0,
+                                ),
+                              ),
                               child: Text(
                                 (state.showingResults &&
                                         state.lastCorrectCode != null &&
@@ -232,7 +296,11 @@ class GameScreen extends StatelessWidget {
                                           state.lastCorrectCode!.length > 2)
                                       ? Colors.green
                                       : Colors.transparent,
-                                  fontSize: 32,
+                                  fontSize:
+                                      ResponsiveUtils.getResponsiveFontSize(
+                                        context,
+                                        32.0,
+                                      ),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -263,7 +331,9 @@ class GameScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(
+                  height: ResponsiveUtils.getResponsiveSpacing(context, 20.0),
+                ),
                 // Secret words display at the bottom - 4 widgets in 2 rows
                 Column(
                   children: [
@@ -285,7 +355,12 @@ class GameScreen extends StatelessWidget {
                                   },
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(
+                          width: ResponsiveUtils.getResponsiveSpacing(
+                            context,
+                            12.0,
+                          ),
+                        ),
                         Expanded(
                           child: SecretWordsDisplay(
                             wordNumber: 2,
@@ -303,7 +378,12 @@ class GameScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(
+                      height: ResponsiveUtils.getResponsiveSpacing(
+                        context,
+                        12.0,
+                      ),
+                    ),
                     // Second row: Words 3 and 4
                     Row(
                       children: [
@@ -322,7 +402,12 @@ class GameScreen extends StatelessWidget {
                                   },
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(
+                          width: ResponsiveUtils.getResponsiveSpacing(
+                            context,
+                            12.0,
+                          ),
+                        ),
                         Expanded(
                           child: SecretWordsDisplay(
                             wordNumber: 4,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:decrypto_2/utils/responsive_utils.dart';
 
 class HintDisplay extends StatelessWidget {
   const HintDisplay({
@@ -18,11 +19,22 @@ class HintDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get responsive size for this HintDisplay
+    final hintSize = ResponsiveUtils.getHintDisplaySize(context);
+    final numberFontSize = ResponsiveUtils.getAdaptiveFontSize(
+      context,
+      baseSize: 32.0,
+      availableWidth: hintSize.width * 0.8, // Leave some padding
+      text: selectedNumber != null
+          ? '$selectedNumber'
+          : '9', // Test with widest digit
+    );
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 100,
-        height: 120,
+        width: hintSize.width,
+        height: hintSize.height,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
@@ -42,15 +54,23 @@ class HintDisplay extends StatelessWidget {
                           ? (isCorrect! ? Colors.green : Colors.red)
                           : Theme.of(context).colorScheme.primary)
                     : Colors.transparent,
-                fontSize: 32,
+                fontSize: numberFontSize,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(
+              height: ResponsiveUtils.getResponsiveSpacing(context, 8.0),
+            ),
             // Display actual hint or placeholder
             if (hint != null && hint!.isNotEmpty)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: EdgeInsets.symmetric(
+                  horizontal: ResponsiveUtils.getResponsiveSpacing(
+                    context,
+                    8.0,
+                  ),
+                  vertical: ResponsiveUtils.getResponsiveSpacing(context, 4.0),
+                ),
                 decoration: BoxDecoration(
                   color: Theme.of(
                     context,
@@ -62,15 +82,21 @@ class HintDisplay extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                     fontWeight: FontWeight.bold,
+                    fontSize: ResponsiveUtils.getResponsiveFontSize(
+                      context,
+                      12.0,
+                    ),
                   ),
                   textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               )
             else
               // Placeholder for hint content
               Container(
-                width: 60,
-                height: 20,
+                width: hintSize.width * 0.6,
+                height: ResponsiveUtils.getResponsiveSpacing(context, 20.0),
                 decoration: BoxDecoration(
                   color: Theme.of(
                     context,
