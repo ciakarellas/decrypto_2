@@ -117,20 +117,28 @@ class GameScreen extends StatelessWidget {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            if (state.showingResults &&
-                                state.lastCorrectCode != null &&
-                                state.lastCorrectCode!.isNotEmpty)
-                              Container(
-                                margin: const EdgeInsets.only(top: 8),
-                                child: Text(
-                                  state.lastCorrectCode![0],
-                                  style: TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                            Container(
+                              height:
+                                  46, // Fixed height to prevent layout shifts
+                              margin: const EdgeInsets.only(top: 8),
+                              child: Text(
+                                (state.showingResults &&
+                                        state.lastCorrectCode != null &&
+                                        state.lastCorrectCode!.isNotEmpty)
+                                    ? state.lastCorrectCode![0]
+                                    : '',
+                                style: TextStyle(
+                                  color:
+                                      (state.showingResults &&
+                                          state.lastCorrectCode != null &&
+                                          state.lastCorrectCode!.isNotEmpty)
+                                      ? Colors.green
+                                      : Colors.transparent,
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
+                            ),
                             HintDisplay(
                               label: 'Hint 1',
                               hint: state.currentClues.isNotEmpty
@@ -159,20 +167,28 @@ class GameScreen extends StatelessWidget {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            if (state.showingResults &&
-                                state.lastCorrectCode != null &&
-                                state.lastCorrectCode!.length > 1)
-                              Container(
-                                margin: const EdgeInsets.only(top: 8),
-                                child: Text(
-                                  state.lastCorrectCode![1],
-                                  style: TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                            Container(
+                              height:
+                                  46, // Fixed height to prevent layout shifts
+                              margin: const EdgeInsets.only(top: 8),
+                              child: Text(
+                                (state.showingResults &&
+                                        state.lastCorrectCode != null &&
+                                        state.lastCorrectCode!.length > 1)
+                                    ? state.lastCorrectCode![1]
+                                    : '',
+                                style: TextStyle(
+                                  color:
+                                      (state.showingResults &&
+                                          state.lastCorrectCode != null &&
+                                          state.lastCorrectCode!.length > 1)
+                                      ? Colors.green
+                                      : Colors.transparent,
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
+                            ),
                             HintDisplay(
                               label: 'Hint 2',
                               hint: state.currentClues.length > 1
@@ -199,20 +215,28 @@ class GameScreen extends StatelessWidget {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            if (state.showingResults &&
-                                state.lastCorrectCode != null &&
-                                state.lastCorrectCode!.length > 2)
-                              Container(
-                                margin: const EdgeInsets.only(top: 8),
-                                child: Text(
-                                  state.lastCorrectCode![2],
-                                  style: TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                            Container(
+                              height:
+                                  46, // Fixed height to prevent layout shifts
+                              margin: const EdgeInsets.only(top: 8),
+                              child: Text(
+                                (state.showingResults &&
+                                        state.lastCorrectCode != null &&
+                                        state.lastCorrectCode!.length > 2)
+                                    ? state.lastCorrectCode![2]
+                                    : '',
+                                style: TextStyle(
+                                  color:
+                                      (state.showingResults &&
+                                          state.lastCorrectCode != null &&
+                                          state.lastCorrectCode!.length > 2)
+                                      ? Colors.green
+                                      : Colors.transparent,
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
+                            ),
                             HintDisplay(
                               label: 'Hint 3',
                               hint: state.currentClues.length > 2

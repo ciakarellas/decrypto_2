@@ -33,20 +33,19 @@ class HintDisplay extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Show selected number with color coding
-            if (selectedNumber != null)
-              Text(
-                '$selectedNumber',
-                style: TextStyle(
-                  color: isCorrect != null
-                      ? (isCorrect! ? Colors.green : Colors.red)
-                      : Theme.of(context).colorScheme.primary,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
-              )
-            else
-              const SizedBox(height: 32),
+            // Reserved space for selected number with consistent height
+            Text(
+              selectedNumber != null ? '$selectedNumber' : '',
+              style: TextStyle(
+                color: selectedNumber != null
+                    ? (isCorrect != null
+                          ? (isCorrect! ? Colors.green : Colors.red)
+                          : Theme.of(context).colorScheme.primary)
+                    : Colors.transparent,
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 8),
             // Display actual hint or placeholder
             if (hint != null && hint!.isNotEmpty)
