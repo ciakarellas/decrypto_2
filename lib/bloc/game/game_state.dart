@@ -13,7 +13,9 @@ class GameState extends Equatable {
     this.successfulGuesses = 0,
     this.currentCode,
     this.currentClues = const [],
-    this.selectedNumbers = const [],
+    this.selectedNumbers = const [null, null, null],
+    this.selectedWordNumber,
+    this.selectedPosition,
     this.showingResults = false,
     this.lastCorrectCode,
   });
@@ -26,7 +28,9 @@ class GameState extends Equatable {
   final int successfulGuesses;
   final String? currentCode;
   final List<String> currentClues;
-  final List<int> selectedNumbers;
+  final List<int?> selectedNumbers;
+  final int? selectedWordNumber;
+  final int? selectedPosition;
   final bool showingResults;
   final String? lastCorrectCode;
 
@@ -39,7 +43,9 @@ class GameState extends Equatable {
     int? successfulGuesses,
     String? currentCode,
     List<String>? currentClues,
-    List<int>? selectedNumbers,
+    List<int?>? selectedNumbers,
+    int? selectedWordNumber,
+    int? selectedPosition,
     bool? showingResults,
     String? lastCorrectCode,
   }) {
@@ -53,6 +59,8 @@ class GameState extends Equatable {
       currentCode: currentCode ?? this.currentCode,
       currentClues: currentClues ?? this.currentClues,
       selectedNumbers: selectedNumbers ?? this.selectedNumbers,
+      selectedWordNumber: selectedWordNumber ?? this.selectedWordNumber,
+      selectedPosition: selectedPosition ?? this.selectedPosition,
       showingResults: showingResults ?? this.showingResults,
       lastCorrectCode: lastCorrectCode ?? this.lastCorrectCode,
     );
@@ -69,6 +77,8 @@ class GameState extends Equatable {
     currentCode,
     currentClues,
     selectedNumbers,
+    selectedWordNumber,
+    selectedPosition,
     showingResults,
     lastCorrectCode,
   ];

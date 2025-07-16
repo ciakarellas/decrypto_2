@@ -9,6 +9,7 @@ class HintDisplay extends StatelessWidget {
     this.onTap,
     this.selectedNumber,
     this.isCorrect,
+    this.isSelected = false,
   });
 
   final String label;
@@ -16,6 +17,7 @@ class HintDisplay extends StatelessWidget {
   final VoidCallback? onTap;
   final int? selectedNumber;
   final bool? isCorrect;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +38,15 @@ class HintDisplay extends StatelessWidget {
         width: hintSize.width,
         height: hintSize.height,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+          color: isSelected
+              ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
+              : Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+            color: isSelected
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+            width: isSelected ? 2.0 : 1.0,
           ),
         ),
         child: Column(

@@ -184,20 +184,23 @@ class GameScreen extends StatelessWidget {
                               hint: state.currentClues.isNotEmpty
                                   ? state.currentClues[0]
                                   : null,
-                              selectedNumber: state.selectedNumbers.isNotEmpty
-                                  ? state.selectedNumbers[0]
-                                  : null,
+                              selectedNumber: state.selectedNumbers[0],
+                              isSelected: state.selectedPosition == 0,
                               isCorrect:
                                   state.showingResults &&
-                                      state.selectedNumbers.isNotEmpty &&
+                                      state.selectedNumbers[0] != null &&
                                       state.lastCorrectCode != null &&
                                       state.lastCorrectCode!.isNotEmpty
                                   ? state.selectedNumbers[0] ==
                                         int.parse(state.lastCorrectCode![0])
                                   : null,
-                              onTap: () {
-                                // Handle hint 1 tap
-                              },
+                              onTap: state.showingResults
+                                  ? null
+                                  : () {
+                                      context.read<GameCubit>().selectPosition(
+                                        0,
+                                      );
+                                    },
                             ),
 
                             // Show correct digit below HintDisplay when showing results
@@ -248,20 +251,23 @@ class GameScreen extends StatelessWidget {
                               hint: state.currentClues.length > 1
                                   ? state.currentClues[1]
                                   : null,
-                              selectedNumber: state.selectedNumbers.length > 1
-                                  ? state.selectedNumbers[1]
-                                  : null,
+                              selectedNumber: state.selectedNumbers[1],
+                              isSelected: state.selectedPosition == 1,
                               isCorrect:
                                   state.showingResults &&
-                                      state.selectedNumbers.length > 1 &&
+                                      state.selectedNumbers[1] != null &&
                                       state.lastCorrectCode != null &&
                                       state.lastCorrectCode!.length > 1
                                   ? state.selectedNumbers[1] ==
                                         int.parse(state.lastCorrectCode![1])
                                   : null,
-                              onTap: () {
-                                // Handle hint 2 tap
-                              },
+                              onTap: state.showingResults
+                                  ? null
+                                  : () {
+                                      context.read<GameCubit>().selectPosition(
+                                        1,
+                                      );
+                                    },
                             ),
                           ],
                         ),
@@ -310,20 +316,23 @@ class GameScreen extends StatelessWidget {
                               hint: state.currentClues.length > 2
                                   ? state.currentClues[2]
                                   : null,
-                              selectedNumber: state.selectedNumbers.length > 2
-                                  ? state.selectedNumbers[2]
-                                  : null,
+                              selectedNumber: state.selectedNumbers[2],
+                              isSelected: state.selectedPosition == 2,
                               isCorrect:
                                   state.showingResults &&
-                                      state.selectedNumbers.length > 2 &&
+                                      state.selectedNumbers[2] != null &&
                                       state.lastCorrectCode != null &&
                                       state.lastCorrectCode!.length > 2
                                   ? state.selectedNumbers[2] ==
                                         int.parse(state.lastCorrectCode![2])
                                   : null,
-                              onTap: () {
-                                // Handle hint 3 tap
-                              },
+                              onTap: state.showingResults
+                                  ? null
+                                  : () {
+                                      context.read<GameCubit>().selectPosition(
+                                        2,
+                                      );
+                                    },
                             ),
                           ],
                         ),
@@ -348,10 +357,11 @@ class GameScreen extends StatelessWidget {
                                 : '',
                             showWord: false,
                             hints: state.clueHistory[0] ?? [],
+                            isSelected: state.selectedWordNumber == 1,
                             onTap: state.showingResults
                                 ? null
                                 : () {
-                                    context.read<GameCubit>().selectNumber(1);
+                                    context.read<GameCubit>().selectWord(1);
                                   },
                           ),
                         ),
@@ -369,10 +379,11 @@ class GameScreen extends StatelessWidget {
                                 : '',
                             showWord: false,
                             hints: state.clueHistory[1] ?? [],
+                            isSelected: state.selectedWordNumber == 2,
                             onTap: state.showingResults
                                 ? null
                                 : () {
-                                    context.read<GameCubit>().selectNumber(2);
+                                    context.read<GameCubit>().selectWord(2);
                                   },
                           ),
                         ),
@@ -395,10 +406,11 @@ class GameScreen extends StatelessWidget {
                                 : '',
                             showWord: false,
                             hints: state.clueHistory[2] ?? [],
+                            isSelected: state.selectedWordNumber == 3,
                             onTap: state.showingResults
                                 ? null
                                 : () {
-                                    context.read<GameCubit>().selectNumber(3);
+                                    context.read<GameCubit>().selectWord(3);
                                   },
                           ),
                         ),
@@ -416,10 +428,11 @@ class GameScreen extends StatelessWidget {
                                 : '',
                             showWord: false,
                             hints: state.clueHistory[3] ?? [],
+                            isSelected: state.selectedWordNumber == 4,
                             onTap: state.showingResults
                                 ? null
                                 : () {
-                                    context.read<GameCubit>().selectNumber(4);
+                                    context.read<GameCubit>().selectWord(4);
                                   },
                           ),
                         ),

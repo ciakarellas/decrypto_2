@@ -8,6 +8,7 @@ class SecretWordsDisplay extends StatelessWidget {
     this.showWord = false,
     this.hints = const [],
     this.onTap,
+    this.isSelected = false,
   });
 
   final int wordNumber;
@@ -15,6 +16,7 @@ class SecretWordsDisplay extends StatelessWidget {
   final bool showWord;
   final List<String> hints;
   final VoidCallback? onTap;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +30,15 @@ class SecretWordsDisplay extends StatelessWidget {
         height: componentHeight,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
+          color: isSelected
+              ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
+              : Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
+            color: isSelected
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
+            width: isSelected ? 2.0 : 1.0,
           ),
         ),
         child: Stack(

@@ -26,7 +26,9 @@ class GameCubit extends Cubit<GameState> {
         roundCount: 0,
         successfulGuesses: 0,
         playerScore: 0,
-        selectedNumbers: const [],
+        selectedNumbers: const [null, null, null],
+        selectedWordNumber: null,
+        selectedPosition: null,
         showingResults: false,
         lastCorrectCode: null,
       ),
@@ -144,7 +146,9 @@ class GameCubit extends Cubit<GameState> {
           clueHistory: newClueHistory,
           showingResults: false,
           lastCorrectCode: null,
-          selectedNumbers: const [],
+          selectedNumbers: const [null, null, null],
+          selectedWordNumber: null,
+          selectedPosition: null,
         ),
       );
     } else {
@@ -153,7 +157,9 @@ class GameCubit extends Cubit<GameState> {
         state.copyWith(
           showingResults: false,
           lastCorrectCode: null,
-          selectedNumbers: const [],
+          selectedNumbers: const [null, null, null],
+          selectedWordNumber: null,
+          selectedPosition: null,
         ),
       );
     }
@@ -182,34 +188,134 @@ class GameCubit extends Cubit<GameState> {
     _showCluesForCode(newCode);
   }
 
-  /// Handles user selection of a word number by tapping SecretWordsDisplay
-  void selectNumber(int wordNumber) {
-    if (state.status != GameStatus.playing) return;
+  /// Handle SecretWordsDisplay tap - bidirectional selection
+  void selectWord(int wordNumber) {
+    if (state.status != GameStatus.playing || state.showingResults) return;
 
-    final currentSelected = List<int>.from(state.selectedNumbers);
+    final currentNumbers = List<int?>.from(state.selectedNumbers);
 
-    // Check if number is already selected
-    if (currentSelected.contains(wordNumber)) {
-      // Remove the number (toggle off)
-      currentSelected.remove(wordNumber);
-    } else {
-      // Add the number only if we have less than 3 numbers
-      if (currentSelected.length < 3) {
-        currentSelected.add(wordNumber);
+    // Check if this word is already placed somewhere
+    int? currentPositionOfWord;
+    for (int i = 0; i < currentNumbers.length; i++) {
+      if (currentNumbers[i] == wordNumber) {
+        currentPositionOfWord = i;
+        break;
       }
     }
 
-    emit(state.copyWith(selectedNumbers: currentSelected));
+    // If word is already placed, remove it (deselect)
+    if (currentPositionOfWord != null) {
+      currentNumbers[currentPositionOfWord] = null;
+      emit(
+        state.copyWith(
+          selectedNumbers: currentNumbers,
+          selectedWordNumber: null,
+          selectedPosition: null,
+        ),
+      );
+      return;
+    }
 
-    // If we now have 3 numbers, automatically submit the guess
-    if (currentSelected.length == 3) {
-      final guess = currentSelected.join('');
+    // If a position is already selected, place word there immediately
+    if (state.selectedPosition != null) {
+      _placeWordAtPosition(wordNumber, state.selectedPosition!);
+      return;
+    }
+
+    // Otherwise, just select this word (toggle selection)
+    final newSelectedWordNumber = state.selectedWordNumber == wordNumber
+        ? null
+        : wordNumber;
+
+    emit(
+      state.copyWith(
+        selectedWordNumber: newSelectedWordNumber,
+        selectedPosition: null, // Clear position selection when selecting word
+      ),
+    );
+  }
+
+  /// Handle HintDisplay tap - bidirectional selection
+  void selectPosition(int position) {
+    if (state.status != GameStatus.playing ||
+        state.showingResults ||
+        position < 0 ||
+        position > 2) {
+      return;
+    }
+
+    final currentNumbers = List<int?>.from(state.selectedNumbers);
+
+    // If position already has a number, remove it (deselect)
+    if (currentNumbers[position] != null) {
+      currentNumbers[position] = null;
+      emit(
+        state.copyWith(
+          selectedNumbers: currentNumbers,
+          selectedWordNumber: null,
+          selectedPosition: null,
+        ),
+      );
+      return;
+    }
+
+    // If a word is already selected, place it here immediately
+    if (state.selectedWordNumber != null) {
+      _placeWordAtPosition(state.selectedWordNumber!, position);
+      return;
+    }
+
+    // Otherwise, just select this position (toggle selection)
+    final newSelectedPosition = state.selectedPosition == position
+        ? null
+        : position;
+
+    emit(
+      state.copyWith(
+        selectedPosition: newSelectedPosition,
+        selectedWordNumber:
+            null, // Clear word selection when selecting position
+      ),
+    );
+  }
+
+  /// Internal helper to place word at position and handle auto-submit
+  void _placeWordAtPosition(int wordNumber, int position) {
+    final currentNumbers = List<int?>.from(state.selectedNumbers);
+
+    // Remove this word number from any other position first
+    for (int i = 0; i < currentNumbers.length; i++) {
+      if (currentNumbers[i] == wordNumber) {
+        currentNumbers[i] = null;
+      }
+    }
+
+    // Place the word number at the specified position
+    currentNumbers[position] = wordNumber;
+
+    emit(
+      state.copyWith(
+        selectedNumbers: currentNumbers,
+        selectedWordNumber: null, // Clear selections after placing
+        selectedPosition: null,
+      ),
+    );
+
+    // Check if all 3 positions are filled
+    if (currentNumbers.every((number) => number != null)) {
+      final guess = currentNumbers.map((n) => n.toString()).join('');
       submitGuess(guess);
     }
   }
 
   /// Clears the selected numbers (for reset functionality)
   void clearSelection() {
-    emit(state.copyWith(selectedNumbers: const []));
+    emit(
+      state.copyWith(
+        selectedNumbers: const [null, null, null],
+        selectedWordNumber: null,
+        selectedPosition: null,
+      ),
+    );
   }
 }
