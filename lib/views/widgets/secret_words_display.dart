@@ -9,6 +9,7 @@ class SecretWordsDisplay extends StatelessWidget {
     this.hints = const [],
     this.onTap,
     this.isSelected = false,
+    this.isPaired = false,
   });
 
   final int wordNumber;
@@ -17,6 +18,7 @@ class SecretWordsDisplay extends StatelessWidget {
   final List<String> hints;
   final VoidCallback? onTap;
   final bool isSelected;
+  final bool isPaired;
 
   @override
   Widget build(BuildContext context) {
@@ -30,15 +32,19 @@ class SecretWordsDisplay extends StatelessWidget {
         height: componentHeight,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isSelected
+          color: isPaired
+              ? Colors.green.withValues(alpha: 0.3)
+              : isSelected
               ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
               : Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected
+            color: isPaired
+                ? Colors.green
+                : isSelected
                 ? Theme.of(context).colorScheme.primary
                 : Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
-            width: isSelected ? 2.0 : 1.0,
+            width: (isPaired || isSelected) ? 2.0 : 1.0,
           ),
         ),
         child: Stack(

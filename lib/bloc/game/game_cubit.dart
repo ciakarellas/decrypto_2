@@ -26,9 +26,8 @@ class GameCubit extends Cubit<GameState> {
         roundCount: 0,
         successfulGuesses: 0,
         playerScore: 0,
-        selectedNumbers: const [null, null, null],
-        selectedWordNumber: null,
-        selectedPosition: null,
+        pairs: const [],
+        selectedSecretWord: null,
         showingResults: false,
         lastCorrectCode: null,
       ),
@@ -146,9 +145,8 @@ class GameCubit extends Cubit<GameState> {
           clueHistory: newClueHistory,
           showingResults: false,
           lastCorrectCode: null,
-          selectedNumbers: const [null, null, null],
-          selectedWordNumber: null,
-          selectedPosition: null,
+          pairs: const [],
+          selectedSecretWord: null,
         ),
       );
     } else {
@@ -157,9 +155,8 @@ class GameCubit extends Cubit<GameState> {
         state.copyWith(
           showingResults: false,
           lastCorrectCode: null,
-          selectedNumbers: const [null, null, null],
-          selectedWordNumber: null,
-          selectedPosition: null,
+          pairs: const [],
+          selectedSecretWord: null,
         ),
       );
     }
@@ -188,54 +185,34 @@ class GameCubit extends Cubit<GameState> {
     _showCluesForCode(newCode);
   }
 
-  /// Handle SecretWordsDisplay tap - bidirectional selection
+  /// Handle SecretWordsDisplay tap - new simplified logic
   void selectWord(int wordNumber) {
     if (state.status != GameStatus.playing || state.showingResults) return;
 
-    final currentNumbers = List<int?>.from(state.selectedNumbers);
-
-    // Check if this word is already placed somewhere
-    int? currentPositionOfWord;
-    for (int i = 0; i < currentNumbers.length; i++) {
-      if (currentNumbers[i] == wordNumber) {
-        currentPositionOfWord = i;
-        break;
-      }
-    }
-
-    // If word is already placed, remove it (deselect)
-    if (currentPositionOfWord != null) {
-      currentNumbers[currentPositionOfWord] = null;
-      emit(
-        state.copyWith(
-          selectedNumbers: currentNumbers,
-          selectedWordNumber: null,
-          selectedPosition: null,
-        ),
-      );
-      return;
-    }
-
-    // If a position is already selected, place word there immediately
-    if (state.selectedPosition != null) {
-      _placeWordAtPosition(wordNumber, state.selectedPosition!);
-      return;
-    }
-
-    // Otherwise, just select this word (toggle selection)
-    final newSelectedWordNumber = state.selectedWordNumber == wordNumber
-        ? null
-        : wordNumber;
-
-    emit(
-      state.copyWith(
-        selectedWordNumber: newSelectedWordNumber,
-        selectedPosition: null, // Clear position selection when selecting word
-      ),
+    // Check if this word is already paired
+    final existingPairIndex = state.pairs.indexWhere(
+      (pair) => pair.secretWord == wordNumber,
     );
+
+    // If word is already paired, unpair it (user wants to change their mind)
+    if (existingPairIndex != -1) {
+      final newPairs = List<WordHintPair>.from(state.pairs)
+        ..removeAt(existingPairIndex);
+      emit(state.copyWith(pairs: newPairs, selectedSecretWord: null));
+      return;
+    }
+
+    // If this word is currently selected, deselect it
+    if (state.selectedSecretWord == wordNumber) {
+      emit(state.copyWith(selectedSecretWord: null));
+      return;
+    }
+
+    // Otherwise, select this word
+    emit(state.copyWith(selectedSecretWord: wordNumber));
   }
 
-  /// Handle HintDisplay tap - bidirectional selection
+  /// Handle HintDisplay tap - pair with selected secret word
   void selectPosition(int position) {
     if (state.status != GameStatus.playing ||
         state.showingResults ||
@@ -244,78 +221,42 @@ class GameCubit extends Cubit<GameState> {
       return;
     }
 
-    final currentNumbers = List<int?>.from(state.selectedNumbers);
+    // Do nothing if no secret word is selected
+    if (state.selectedSecretWord == null) return;
 
-    // If position already has a number, remove it (deselect)
-    if (currentNumbers[position] != null) {
-      currentNumbers[position] = null;
-      emit(
-        state.copyWith(
-          selectedNumbers: currentNumbers,
-          selectedWordNumber: null,
-          selectedPosition: null,
-        ),
-      );
-      return;
-    }
-
-    // If a word is already selected, place it here immediately
-    if (state.selectedWordNumber != null) {
-      _placeWordAtPosition(state.selectedWordNumber!, position);
-      return;
-    }
-
-    // Otherwise, just select this position (toggle selection)
-    final newSelectedPosition = state.selectedPosition == position
-        ? null
-        : position;
-
-    emit(
-      state.copyWith(
-        selectedPosition: newSelectedPosition,
-        selectedWordNumber:
-            null, // Clear word selection when selecting position
-      ),
+    // Check if this position is already used
+    final existingPairIndex = state.pairs.indexWhere(
+      (pair) => pair.hintPosition == position,
     );
-  }
 
-  /// Internal helper to place word at position and handle auto-submit
-  void _placeWordAtPosition(int wordNumber, int position) {
-    final currentNumbers = List<int?>.from(state.selectedNumbers);
+    // If position is already used, do nothing (shouldn't happen in UI)
+    if (existingPairIndex != -1) return;
 
-    // Remove this word number from any other position first
-    for (int i = 0; i < currentNumbers.length; i++) {
-      if (currentNumbers[i] == wordNumber) {
-        currentNumbers[i] = null;
-      }
-    }
-
-    // Place the word number at the specified position
-    currentNumbers[position] = wordNumber;
-
-    emit(
-      state.copyWith(
-        selectedNumbers: currentNumbers,
-        selectedWordNumber: null, // Clear selections after placing
-        selectedPosition: null,
-      ),
+    // Create the new pair
+    final newPair = WordHintPair(
+      secretWord: state.selectedSecretWord!,
+      hintPosition: position,
     );
+
+    final newPairs = List<WordHintPair>.from(state.pairs)..add(newPair);
+
+    emit(state.copyWith(pairs: newPairs, selectedSecretWord: null));
 
     // Check if all 3 positions are filled
-    if (currentNumbers.every((number) => number != null)) {
-      final guess = currentNumbers.map((n) => n.toString()).join('');
+    if (newPairs.length == 3) {
+      // Sort pairs by hint position to get correct order
+      final sortedPairs = List<WordHintPair>.from(newPairs)
+        ..sort((a, b) => a.hintPosition.compareTo(b.hintPosition));
+
+      final guess = sortedPairs
+          .map((pair) => pair.secretWord.toString())
+          .join('');
       submitGuess(guess);
     }
   }
 
   /// Clears the selected numbers (for reset functionality)
   void clearSelection() {
-    emit(
-      state.copyWith(
-        selectedNumbers: const [null, null, null],
-        selectedWordNumber: null,
-        selectedPosition: null,
-      ),
-    );
+    emit(state.copyWith(pairs: const [], selectedSecretWord: null));
   }
 }

@@ -3,6 +3,16 @@ import 'package:decrypto_2/models/main_word.dart';
 
 enum GameStatus { initial, playing, finished }
 
+class WordHintPair extends Equatable {
+  const WordHintPair({required this.secretWord, required this.hintPosition});
+
+  final int secretWord; // 1-4
+  final int hintPosition; // 0-2
+
+  @override
+  List<Object> get props => [secretWord, hintPosition];
+}
+
 class GameState extends Equatable {
   const GameState({
     this.status = GameStatus.initial,
@@ -13,9 +23,8 @@ class GameState extends Equatable {
     this.successfulGuesses = 0,
     this.currentCode,
     this.currentClues = const [],
-    this.selectedNumbers = const [null, null, null],
-    this.selectedWordNumber,
-    this.selectedPosition,
+    this.pairs = const [],
+    this.selectedSecretWord,
     this.showingResults = false,
     this.lastCorrectCode,
   });
@@ -28,9 +37,8 @@ class GameState extends Equatable {
   final int successfulGuesses;
   final String? currentCode;
   final List<String> currentClues;
-  final List<int?> selectedNumbers;
-  final int? selectedWordNumber;
-  final int? selectedPosition;
+  final List<WordHintPair> pairs;
+  final int? selectedSecretWord;
   final bool showingResults;
   final String? lastCorrectCode;
 
@@ -43,9 +51,8 @@ class GameState extends Equatable {
     int? successfulGuesses,
     String? currentCode,
     List<String>? currentClues,
-    List<int?>? selectedNumbers,
-    int? selectedWordNumber,
-    int? selectedPosition,
+    List<WordHintPair>? pairs,
+    int? selectedSecretWord,
     bool? showingResults,
     String? lastCorrectCode,
   }) {
@@ -58,9 +65,8 @@ class GameState extends Equatable {
       successfulGuesses: successfulGuesses ?? this.successfulGuesses,
       currentCode: currentCode ?? this.currentCode,
       currentClues: currentClues ?? this.currentClues,
-      selectedNumbers: selectedNumbers ?? this.selectedNumbers,
-      selectedWordNumber: selectedWordNumber ?? this.selectedWordNumber,
-      selectedPosition: selectedPosition ?? this.selectedPosition,
+      pairs: pairs ?? this.pairs,
+      selectedSecretWord: selectedSecretWord ?? this.selectedSecretWord,
       showingResults: showingResults ?? this.showingResults,
       lastCorrectCode: lastCorrectCode ?? this.lastCorrectCode,
     );
@@ -76,9 +82,8 @@ class GameState extends Equatable {
     successfulGuesses,
     currentCode,
     currentClues,
-    selectedNumbers,
-    selectedWordNumber,
-    selectedPosition,
+    pairs,
+    selectedSecretWord,
     showingResults,
     lastCorrectCode,
   ];

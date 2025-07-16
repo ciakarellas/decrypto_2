@@ -184,14 +184,31 @@ class GameScreen extends StatelessWidget {
                               hint: state.currentClues.isNotEmpty
                                   ? state.currentClues[0]
                                   : null,
-                              selectedNumber: state.selectedNumbers[0],
-                              isSelected: state.selectedPosition == 0,
+                              selectedNumber: state.pairs
+                                  .where((pair) => pair.hintPosition == 0)
+                                  .firstOrNull
+                                  ?.secretWord,
+                              isPaired: state.pairs.any(
+                                (pair) => pair.hintPosition == 0,
+                              ),
                               isCorrect:
                                   state.showingResults &&
-                                      state.selectedNumbers[0] != null &&
+                                      state.pairs
+                                              .where(
+                                                (pair) =>
+                                                    pair.hintPosition == 0,
+                                              )
+                                              .firstOrNull
+                                              ?.secretWord !=
+                                          null &&
                                       state.lastCorrectCode != null &&
                                       state.lastCorrectCode!.isNotEmpty
-                                  ? state.selectedNumbers[0] ==
+                                  ? state.pairs
+                                            .where(
+                                              (pair) => pair.hintPosition == 0,
+                                            )
+                                            .firstOrNull!
+                                            .secretWord ==
                                         int.parse(state.lastCorrectCode![0])
                                   : null,
                               onTap: state.showingResults
@@ -251,14 +268,31 @@ class GameScreen extends StatelessWidget {
                               hint: state.currentClues.length > 1
                                   ? state.currentClues[1]
                                   : null,
-                              selectedNumber: state.selectedNumbers[1],
-                              isSelected: state.selectedPosition == 1,
+                              selectedNumber: state.pairs
+                                  .where((pair) => pair.hintPosition == 1)
+                                  .firstOrNull
+                                  ?.secretWord,
+                              isPaired: state.pairs.any(
+                                (pair) => pair.hintPosition == 1,
+                              ),
                               isCorrect:
                                   state.showingResults &&
-                                      state.selectedNumbers[1] != null &&
+                                      state.pairs
+                                              .where(
+                                                (pair) =>
+                                                    pair.hintPosition == 1,
+                                              )
+                                              .firstOrNull
+                                              ?.secretWord !=
+                                          null &&
                                       state.lastCorrectCode != null &&
                                       state.lastCorrectCode!.length > 1
-                                  ? state.selectedNumbers[1] ==
+                                  ? state.pairs
+                                            .where(
+                                              (pair) => pair.hintPosition == 1,
+                                            )
+                                            .firstOrNull!
+                                            .secretWord ==
                                         int.parse(state.lastCorrectCode![1])
                                   : null,
                               onTap: state.showingResults
@@ -316,14 +350,31 @@ class GameScreen extends StatelessWidget {
                               hint: state.currentClues.length > 2
                                   ? state.currentClues[2]
                                   : null,
-                              selectedNumber: state.selectedNumbers[2],
-                              isSelected: state.selectedPosition == 2,
+                              selectedNumber: state.pairs
+                                  .where((pair) => pair.hintPosition == 2)
+                                  .firstOrNull
+                                  ?.secretWord,
+                              isPaired: state.pairs.any(
+                                (pair) => pair.hintPosition == 2,
+                              ),
                               isCorrect:
                                   state.showingResults &&
-                                      state.selectedNumbers[2] != null &&
+                                      state.pairs
+                                              .where(
+                                                (pair) =>
+                                                    pair.hintPosition == 2,
+                                              )
+                                              .firstOrNull
+                                              ?.secretWord !=
+                                          null &&
                                       state.lastCorrectCode != null &&
                                       state.lastCorrectCode!.length > 2
-                                  ? state.selectedNumbers[2] ==
+                                  ? state.pairs
+                                            .where(
+                                              (pair) => pair.hintPosition == 2,
+                                            )
+                                            .firstOrNull!
+                                            .secretWord ==
                                         int.parse(state.lastCorrectCode![2])
                                   : null,
                               onTap: state.showingResults
@@ -357,7 +408,10 @@ class GameScreen extends StatelessWidget {
                                 : '',
                             showWord: false,
                             hints: state.clueHistory[0] ?? [],
-                            isSelected: state.selectedWordNumber == 1,
+                            isSelected: state.selectedSecretWord == 1,
+                            isPaired: state.pairs.any(
+                              (pair) => pair.secretWord == 1,
+                            ),
                             onTap: state.showingResults
                                 ? null
                                 : () {
@@ -379,7 +433,10 @@ class GameScreen extends StatelessWidget {
                                 : '',
                             showWord: false,
                             hints: state.clueHistory[1] ?? [],
-                            isSelected: state.selectedWordNumber == 2,
+                            isSelected: state.selectedSecretWord == 2,
+                            isPaired: state.pairs.any(
+                              (pair) => pair.secretWord == 2,
+                            ),
                             onTap: state.showingResults
                                 ? null
                                 : () {
@@ -406,7 +463,10 @@ class GameScreen extends StatelessWidget {
                                 : '',
                             showWord: false,
                             hints: state.clueHistory[2] ?? [],
-                            isSelected: state.selectedWordNumber == 3,
+                            isSelected: state.selectedSecretWord == 3,
+                            isPaired: state.pairs.any(
+                              (pair) => pair.secretWord == 3,
+                            ),
                             onTap: state.showingResults
                                 ? null
                                 : () {
@@ -428,7 +488,10 @@ class GameScreen extends StatelessWidget {
                                 : '',
                             showWord: false,
                             hints: state.clueHistory[3] ?? [],
-                            isSelected: state.selectedWordNumber == 4,
+                            isSelected: state.selectedSecretWord == 4,
+                            isPaired: state.pairs.any(
+                              (pair) => pair.secretWord == 4,
+                            ),
                             onTap: state.showingResults
                                 ? null
                                 : () {
