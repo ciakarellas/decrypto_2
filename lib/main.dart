@@ -1,3 +1,5 @@
+import 'package:decrypto_2/services/data_seeding_service.dart';
+import 'package:decrypto_2/services/database_service.dart';
 import 'package:decrypto_2/utils/app_theme.dart';
 import 'package:decrypto_2/views/screens/end_game_screen.dart';
 import 'package:decrypto_2/views/screens/game_screen.dart';
@@ -8,31 +10,42 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:decrypto_2/bloc/game/game_cubit.dart';
 import 'package:decrypto_2/services/clue_service.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final databaseService = DatabaseService();
+  await databaseService.database;
+  await DataSeedingService().seedDatabase();
+
+  runApp(MyApp(databaseService: databaseService));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final DatabaseService databaseService;
+
+  const MyApp({super.key, required this.databaseService});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Decrypto',
-      theme: AppTheme.darkTheme,
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const HomeScreen(),
-        '/game': (context) => const GameScreen(),
-        '/settings': (context) => const SettingsScreen(),
-        '/endgame': (context) => BlocProvider.value(
-          value: BlocProvider.of<GameCubit>(context),
-          child: const EndGameScreen(
-            finalScore: 0,
-          ), // Placeholder, actual score will be passed via state
-        ),
-      },
+    return Provider<DatabaseService>.value(
+      value: databaseService,
+      child: MaterialApp(
+        title: 'Decrypto',
+        theme: AppTheme.darkTheme,
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const HomeScreen(),
+          '/game': (context) => const GameScreen(),
+          '/settings': (context) => const SettingsScreen(),
+          '/endgame': (context) => BlocProvider.value(
+            value: BlocProvider.of<GameCubit>(context),
+            child: const EndGameScreen(
+              finalScore: 0,
+            ), // Placeholder, actual score will be passed via state
+          ),
+        },
+      ),
     );
   }
 }

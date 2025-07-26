@@ -33,7 +33,7 @@ class ClueService {
         clueIndex = 0;
       }
 
-      final hint = targetWord.hints[clueIndex];
+      final hint = targetWord.hints[clueIndex].hintText;
       clues.add(hint);
 
       // Mark this hint index as used for this word

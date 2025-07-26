@@ -46,7 +46,7 @@ class GameCubit extends Cubit<GameState> {
 
     // Add first hint for each word (0-based indexing)
     for (int i = 0; i < _secretWords.length; i++) {
-      final firstHint = _secretWords[i].hints[0];
+      final firstHint = _secretWords[i].hints[0].hintText;
       initialClueHistory[i] = [firstHint];
 
       // Mark hint index 0 as used for this word

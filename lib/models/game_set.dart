@@ -1,8 +1,23 @@
+import 'package:equatable/equatable.dart';
 import 'main_word.dart';
 
-class GameSet {
+class GameSet extends Equatable {
+  final int? id;
+  final String name;
+  final String language;
+  final String difficulty;
   final List<MainWord> words;
   final List<String> codes;
 
-  GameSet({required this.words, required this.codes});
+  const GameSet({
+    this.id,
+    required this.name,
+    required this.language,
+    required this.difficulty,
+    required this.words,
+    required this.codes,
+  });
+
+  @override
+  List<Object?> get props => [id, name, language, difficulty, words, codes];
 }
