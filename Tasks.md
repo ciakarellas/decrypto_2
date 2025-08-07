@@ -45,51 +45,51 @@ This file tracks the development tasks for the Decrypto game. The core loop is: 
 - [x] Validate that original game set data remains unmodified.
 - [x] Test game reset functionality with fresh clue tracking.
 
-## Phase 4: Database Implementation & Seeding
+## Phase 4: Database Implementation & Seeding (Completed)
 
 ### 🗄️ Task 1: Setup Database Dependencies & Helper
-- [ ] Add `sqflite` and `path` packages to `pubspec.yaml`.
-- [ ] Create `lib/services/database_service.dart`.
-- [ ] Implement a `DatabaseService` class with a singleton pattern to manage a single database instance.
-- [ ] Implement an `initDB()` method that opens the database and calls a method to create tables.
-- [ ] Define `CREATE TABLE` statements for `game_sets`, `words`, `hints`, and the `game_set_words` junction table based on the agreed schema.
+- [x] Add `sqflite` and `path` packages to `pubspec.yaml`.
+- [x] Create `lib/services/database_service.dart`.
+- [x] Implement a `DatabaseService` class with a singleton pattern to manage a single database instance.
+- [x] Implement an `initDB()` method that opens the database and calls a method to create tables.
+- [x] Define `CREATE TABLE` statements for `game_sets`, `words`, `hints`, and the `game_set_words` junction table based on the agreed schema.
 
 ### 🧬 Task 2: Create/Update Data Models
-- [ ] Update `lib/models/game_set.dart` to reflect the `game_sets` table structure (e.g., `id`, `name`, `language`, `difficulty`).
-- [ ] Update `lib/models/main_word.dart` to include the `id` from the database.
-- [ ] Create a `lib/models/hint.dart` model if needed to represent hint data cleanly.
+- [x] Update `lib/models/game_set.dart` to reflect the `game_sets` table structure (e.g., `id`, `name`, `language`, `difficulty`).
+- [x] Update `lib/models/main_word.dart` to include the `id` from the database.
+- [x] Create a `lib/models/hint.dart` model if needed to represent hint data cleanly.
 
 ### 📥 Task 3: Implement Data Seeding Mechanism
-- [ ] Create a new service: `lib/services/data_seeding_service.dart`.
-- [ ] Implement a main `seedDatabase()` method in this service.
-- [ ] Add a check within the seeder to ensure it only runs once (e.g., by using `SharedPreferences` or checking if a table is already populated).
-- [ ] Implement a file parser to read `words_polish_3.txt` (and later, an English version). The parser should handle the `"word: [hint1, hint2, ...]"` format.
-- [ ] Implement logic to insert unique words into the `words` table, avoiding duplicates.
-- [ ] Implement logic to insert all associated hints into the `hints` table, correctly linked by `word_id`.
-- [ ] Create a hardcoded list/map within the seeder to define your 100 predefined game sets, specifying their `language`, `difficulty`, and the list of `word_text`s they contain.
-- [ ] Use this list to populate the `game_sets` table and the `game_set_words` junction table.
+- [x] Create a new service: `lib/services/data_seeding_service.dart`.
+- [x] Implement a main `seedDatabase()` method in this service.
+- [x] Add a check within the seeder to ensure it only runs once (e.g., by using `SharedPreferences` or checking if a table is already populated).
+- [x] Implement a file parser to read `words_polish_3.txt` (and later, an English version). The parser should handle the `"word: [hint1, hint2, ...]"` format.
+- [x] Implement logic to insert unique words into the `words` table, avoiding duplicates.
+- [x] Implement logic to insert all associated hints into the `hints` table, correctly linked by `word_id`.
+- [x] Create a hardcoded list/map within the seeder to define your 100 predefined game sets, specifying their `language`, `difficulty`, and the list of `word_text`s they contain.
+- [x] Use this list to populate the `game_sets` table and the `game_set_words` junction table.
 
 ### 🔄 Task 4: Refactor WordService to Use Database
-- [ ] **[REFACTOR]** Modify `lib/services/word_service.dart` to remove the hardcoded `_gameSets` list.
-- [ ] Inject an instance of `DatabaseService` into the `WordService`.
-- [ ] **[REFACTOR]** Convert `getNewGameSet()` into an `async` method: `Future<GameSet> getNewGameSet()`.
-- [ ] Implement a database query to select a random `game_set_id` based on specified criteria (e.g., language).
-- [ ] Implement a query (using a `JOIN`) to fetch the 4 `word_id`s and `word_text`s for the selected `game_set_id`.
-- [ ] Implement a query to fetch all `hint_text`s for each of the 4 words.
-- [ ] Assemble the fetched data into the `GameSet` and `MainWord` Dart objects to be returned by the method.
+- [x] **[REFACTOR]** Modify `lib/services/word_service.dart` to remove the hardcoded `_gameSets` list.
+- [x] Inject an instance of `DatabaseService` into the `WordService`.
+- [x] **[REFACTOR]** Convert `getNewGameSet()` into an `async` method: `Future<GameSet> getNewGameSet()`.
+- [x] Implement a database query to select a random `game_set_id` based on specified criteria (e.g., language).
+- [x] Implement a query (using a `JOIN`) to fetch the 4 `word_id`s and `word_text`s for the selected `game_set_id`.
+- [x] Implement a query to fetch all `hint_text`s for each of the 4 words.
+- [x] Assemble the fetched data into the `GameSet` and `MainWord` Dart objects to be returned by the method.
 
 ### 🚀 Task 5: Integrate Seeding into App Startup
-- [ ] **[REFACTOR]** Modify the `main()` function in `lib/main.dart` to be `async`.
-- [ ] Call `WidgetsFlutterBinding.ensureInitialized()` at the start of `main()`.
-- [ ] Instantiate your `DatabaseService` and call its initialization method.
-- [ ] After the database is initialized, instantiate the `DataSeedingService` and call the `seedDatabase()` method.
-- [ ] Ensure the app waits for the seeding to complete before launching the main UI.
-- [ ] Set up a dependency injection system (like `provider`) to make the `DatabaseService` available to the rest of the app.
+- [x] **[REFACTOR]** Modify the `main()` function in `lib/main.dart` to be `async`.
+- [x] Call `WidgetsFlutterBinding.ensureInitialized()` at the start of `main()`.
+- [x] Instantiate your `DatabaseService` and call its initialization method.
+- [x] After the database is initialized, instantiate the `DataSeedingService` and call the `seedDatabase()` method.
+- [x] Ensure the app waits for the seeding to complete before launching the main UI.
+- [x] Set up a dependency injection system (like `provider`) to make the `DatabaseService` available to the rest of the app.
 
 ### 🛠️ Task 6: Create a Game Set Definition Helper
-- [ ] Create a helper function within the `DataSeedingService`, e.g., `defineGameSet({required List<String> words, required String language, required String difficulty, required String name})`.
-- [ ] This function will be used internally by the seeder to create each of the 100 predefined sets.
-- [ ] **Function Logic:**
+- [x] Create a helper function within the `DataSeedingService`, e.g., `defineGameSet({required List<String> words, required String language, required String difficulty, required String name})`.
+- [x] This function will be used internally by the seeder to create each of the 100 predefined sets.
+- [x] **Function Logic:**
     -   It will first query the `words` table to find the IDs for the 4 `word_text` strings provided.
     -   If any of the 4 words are not found in the database, it should throw an error to ensure data integrity.
     -   If all words are found, it will create a new entry in the `game_sets` table with the given `name`, `language`, and `difficulty`.

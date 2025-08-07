@@ -3,20 +3,18 @@ import 'package:decrypto_2/services/database_service.dart';
 import 'package:decrypto_2/utils/app_theme.dart';
 import 'package:decrypto_2/views/screens/end_game_screen.dart';
 import 'package:decrypto_2/views/screens/game_screen.dart';
-import 'package:decrypto_2/services/word_service.dart';
 import 'package:decrypto_2/views/screens/home_screen.dart';
 import 'package:decrypto_2/views/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:decrypto_2/bloc/game/game_cubit.dart';
-import 'package:decrypto_2/services/clue_service.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final databaseService = DatabaseService();
-  await databaseService.database;
-  await DataSeedingService().seedDatabase();
+  await databaseService.database; // Ensures DB is initialized
+  await DataSeedingService(databaseService).seedDatabase();
 
   runApp(MyApp(databaseService: databaseService));
 }

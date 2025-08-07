@@ -24,26 +24,41 @@ class WordService {
     return codeSet.toList();
   }
 
-  Future<GameSet> getNewGameSet() async {
+  Future<GameSet> getNewGameSet({String language = 'Polish'}) async {
     final db = await _databaseService.database;
-    final List<Map<String, dynamic>> gameSets = await db.query('game_sets', where: 'id = ?', whereArgs: [1]);
-    final gameSetData = gameSets.first;
-
-    final List<Map<String, dynamic>> gameSetWords = await db.query(
-      'game_set_words',
-      where: 'game_set_id = ?',
-      whereArgs: [gameSetData['id']],
+    final List<Map<String, dynamic>> gameSets = await db.query(
+      'game_sets',
+      where: 'language = ?',
+      whereArgs: [language],
+      orderBy: 'RANDOM()',
+      limit: 1,
     );
 
+    if (gameSets.isEmpty) {
+      throw Exception('No game sets found for the selected language.');
+    }
+
+    final gameSetData = gameSets.first;
+
+    final List<Map<String, dynamic>> gameSetWords = await db.rawQuery('''
+      SELECT w.id, w.word_text
+      FROM game_set_words gsw
+      JOIN words w ON gsw.word_id = w.id
+      WHERE gsw.game_set_id = ?
+    ''', [gameSetData['id']]);
+
     List<MainWord> words = [];
-    for (var gameSetWord in gameSetWords) {
-      final List<Map<String, dynamic>> wordData = await db.query('words', where: 'id = ?', whereArgs: [gameSetWord['word_id']]);
-      final List<Map<String, dynamic>> hintsData = await db.query('hints', where: 'word_id = ?', whereArgs: [gameSetWord['word_id']]);
+    for (var wordData in gameSetWords) {
+      final List<Map<String, dynamic>> hintsData = await db.query(
+        'hints',
+        where: 'word_id = ?',
+        whereArgs: [wordData['id']],
+      );
 
       words.add(
         MainWord(
-          id: wordData.first['id'],
-          word: wordData.first['word_text'],
+          id: wordData['id'],
+          word: wordData['word_text'],
           hints: hintsData.map((hint) => Hint(id: hint['id'], hintText: hint['hint_text'])).toList(),
         ),
       );
