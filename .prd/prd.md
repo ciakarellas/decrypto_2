@@ -13,7 +13,7 @@ Flutter Decrypto Game Development & Launch Strategy
     * Post-Launch (Phase 4): Ongoing
 * Critical Features for MVP (Phase 1):
     * Single-Player Mode: Functional core gameplay loop (word selection, clues, guessing).
-    * Basic AI Opponent: Simple AI that provides clues and guesses based on keywords.
+    * Basic AI Opponent: Prepare 50 rounds with 4 words and 8 clues for each word.
     * Minimal UI: Basic screens for gameplay, scorekeeping, and a settings page.
     * Single Difficulty Level: Start with an easy difficulty to test core functionality.
     * Basic Score Tracking: Simple point system.
