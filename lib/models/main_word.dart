@@ -1,5 +1,5 @@
+import 'package:decrypto_2/models/hint.dart';
 import 'package:equatable/equatable.dart';
-import 'hint.dart';
 
 class MainWord extends Equatable {
   final int? id;
